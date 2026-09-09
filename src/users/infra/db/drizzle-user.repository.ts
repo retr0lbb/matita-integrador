@@ -45,6 +45,10 @@ export class DrizzleUserRepository implements UserRepository{
         .select()
         .from(usersTable).where(eq(usersTable.email, email))
 
+        if(!user){
+            return null
+        }
+
         return User.convertFromDb({email: user.email, externalId: user.externalId, id: user.id, name: user.name, role: user.role as UserRole})
     }
 }
