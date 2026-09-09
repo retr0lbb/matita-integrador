@@ -1,0 +1,15 @@
+services:
+  db:
+    image: bitnami/postgresql:latest
+    container_name: integrador_db
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=docker
+      - POSTGRESQL_DATABASE=integrador
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/bitnami/postgresql
+
+volumes:
+  pgdata:
