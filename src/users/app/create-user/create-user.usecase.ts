@@ -3,7 +3,6 @@ import { UserRole } from "../../domain/user-role";
 import { User } from "../../domain/user.entity";
 import { USER_REPOSITORY, type UserRepository } from "../../domain/user.repository";
 
-
 export interface CreateUserInput {
   name: string;
   email: string;
