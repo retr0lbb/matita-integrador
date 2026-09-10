@@ -1,30 +1,25 @@
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { UserRole } from "../../domain/value-objects/user-role";
-import { User } from "../../domain/user.entity";
+import { SyncMode, User } from "../../domain/user.entity";
 import { USER_REPOSITORY, type UserRepository } from "../../domain/user.repository";
 
 export interface CreateUserInput {
-  name: string;
-  email: string;
+  firstName: string;
+  lastName: string
   role: UserRole;
+  syncMode: SyncMode
   externalId: string | null
 }
 
 @Injectable()
 export class CreateUserUseCase{
     constructor(
-        @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository) {}
+        @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository
+    ) {}
 
     async execute(input: CreateUserInput): Promise<User>{
-        const existing = await this.userRepository.findByEmail(input.email)
-
-        if(existing){
-            throw new BadRequestException("Ja existe um usuario com esse email")
-        }
-
-        const user = User.create({...input})
+        const user = User.create(input)
         await this.userRepository.save(user)
-
         return user
     }
 }

@@ -1,9 +1,9 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { User } from "../../domain/user.entity";
+import { SyncMode, User } from "../../domain/user.entity";
 import { UserRepository } from "../../domain/user.repository";
 import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { usersTable } from "../../../database/schemas";
+import { usersTable } from "../../../database/schemas/userSchema";
 import { eq } from "drizzle-orm";
 import { UserRole } from "../../domain/value-objects/user-role";
 
@@ -14,9 +14,10 @@ export class DrizzleUserRepository implements UserRepository{
     async save(user: User): Promise<void> {
         await this.db.insert(usersTable).values({
             id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            syncMode: SyncMode.NONE,
         })
     }
 
@@ -30,23 +31,14 @@ export class DrizzleUserRepository implements UserRepository{
         }
 
         return User.convertFromDb({
-            email: user.email, 
+            firstName: user.firstName,
+            lastName: user.lastName,
             id: user.id, 
             externalId: user.externalId,
-            name: user.name,
-            role: user.role as UserRole
+            role: user.role as UserRole,
+            syncMode: user.syncMode as SyncMode,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
         })
-    }
-
-    async findByEmail(email: string): Promise<User | null> {
-        const [user] = await this.db
-        .select()
-        .from(usersTable).where(eq(usersTable.email, email))
-
-        if(!user){
-            return null
-        }
-
-        return User.convertFromDb({email: user.email, externalId: user.externalId, id: user.id, name: user.name, role: user.role as UserRole})
     }
 }

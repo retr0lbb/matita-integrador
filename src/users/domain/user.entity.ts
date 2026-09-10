@@ -1,36 +1,70 @@
 import { UserRole } from "./value-objects/user-role";
 
 type ConversionPayload = {
-    id: string
-    externalId: string | null, 
-    name: string, 
-    email: string, 
-    role: UserRole
+    id: string,
+    externalId: string | null,
+    firstName: string,
+    lastName: string,
+    role: UserRole,
+    syncMode: SyncMode,
+    createdAt: Date,
+    updatedAt: Date 
+}
+
+type CreatePayload = {
+    externalId: string | null,
+    firstName: string,
+    lastName: string,
+    role: UserRole,
+    syncMode: SyncMode
+}
+
+export enum SyncMode{
+    NONE = "NONE",
+    ERP = "ERP",
+    HYBRID = "HYBRID"
 }
 
 export class User {
     private constructor(
         private readonly _id: string,
         private readonly _externalId: string | null,
-        private _name: string,
-        private _email: string,
-        private readonly _role: UserRole
+        private _firstName: string,
+        private _lastName: string,
+        private readonly _role: UserRole,
+        private _syncMode: SyncMode,
+        private readonly _createdAt: Date,
+        private _updatedAt: Date | null
     ){}
 
-    static create(props: Omit<ConversionPayload, "id">){
-        if (!props.name.trim()) {
-            throw new Error('nome não pode ser vazio');
+    static create(payload: CreatePayload){
+        if (!payload.firstName.trim() || !payload.lastName.trim()) {
+            throw new Error('nome e sobrenome não pode ser vazio');
         }
 
-        if (!props.email.includes('@')) {
-            throw new Error('email inválido');
-        }
-
-        return new User(crypto.randomUUID(), props.externalId, props.name, props.email, props.role)
+        return new User(
+            crypto.randomUUID(), 
+            payload.externalId, 
+            payload.firstName, 
+            payload.lastName, 
+            payload.role,
+            payload.syncMode,
+            new Date(),
+            null
+        )
     }
 
-    static convertFromDb(props: ConversionPayload){
-        return new User(props.id, props.externalId, props.name, props.email, props.role)
+    static convertFromDb(payload: ConversionPayload){
+        return new User(
+            payload.id, 
+            payload.externalId, 
+            payload.firstName, 
+            payload.lastName, 
+            payload.role,
+            payload.syncMode,
+            payload.createdAt,
+            payload.updatedAt
+        )
     }
 
     // Getters
@@ -42,34 +76,27 @@ export class User {
         return this._externalId;
     }
 
-    get name(): string {
-        return this._name;
+    get firstName(): string {
+        return this._firstName;
     }
 
-    get email(): string {
-        return this._email;
+    get lastName(): string {
+        return this._lastName;
     }
 
     get role(): UserRole {
         return this._role;
     }
 
-    // Setters (com validações de invariantes)
-    set name(value: string) {
-        if (!value.trim()) {
-            throw new Error('nome não pode ser vazio');
-        }
-        this._name = value;
+    get syncMode(): SyncMode{
+        return this._syncMode
     }
 
-    set email(value: string) {
-        if (!value.includes('@')) {
-            throw new Error('email inválido');
-        }
-        this._email = value;
+    get createdAt(): Date{
+        return this._createdAt
     }
 
-    isProfessor(){
-        return this._role === UserRole.PROFESSOR
+    get updatedAt(): Date | null{
+        return this._updatedAt
     }
 }

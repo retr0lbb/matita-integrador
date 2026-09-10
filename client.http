@@ -4,8 +4,17 @@ POST {{baseUrl}}/user
 Content-Type: application/json
 
 {
-  "name": "Jhon Doe",
-  "email": "jdoe@mail.com",
+  "externalId": null,
+  "firstName": "Henrique",
+  "lastName": "Sampaio",
   "role": "ALUNO",
-  "externalId": null
+  "syncMode": "NONE"
+}
+
+###
+POST {{baseUrl}}/accounts
+Content-Type: application/json
+
+{
+  "userId": "7565ad43-17ce-41ac-aaf8-511bddf4bf29"
 }

@@ -10,7 +10,7 @@ import { AccountStatus } from "../../domain/value-objects/account-status.vo";
 
 
 @Injectable()
-export class DrizzleUserRepository implements AccountRepository{
+export class DrizzleAccountRepository implements AccountRepository{
     constructor(@Inject(DRIZZLE) private readonly db: NodePgDatabase){}
 
     async save(account: Account): Promise<void> {

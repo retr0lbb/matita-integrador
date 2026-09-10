@@ -14,7 +14,7 @@ type AccountConversionPayload = {
 type AccountCreatePayload = {
     googleExternalId: string | null,
     userId: string,
-    googleEmailAddress: string
+    googleEmailAddress: Email
     createdAt: Date,
     status: AccountStatus
 }
@@ -30,9 +30,8 @@ export class Account {
     ){}
 
     static create(payload: AccountCreatePayload){
-        const email = Email.create(payload.googleEmailAddress)
         const id = randomUUID()
-        return new Account(id, null, payload.userId, email, payload.createdAt, AccountStatus.PENDING)
+        return new Account(id, null, payload.userId, payload.googleEmailAddress, payload.createdAt, AccountStatus.PENDING)
     }
 
     static convertFromDb(payload: AccountConversionPayload): Account{
@@ -61,8 +60,8 @@ export class Account {
         return this._id
     }
     
-    public get googleExternalId() : string {
-        return this.googleExternalId
+    public get googleExternalId() : string | null {
+        return this._googleExternalId
     }
     
     public get userId() : string {

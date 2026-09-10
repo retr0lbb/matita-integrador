@@ -1,11 +1,28 @@
-import { pgTable, uuid, varchar, pgEnum } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, pgEnum, timestamp } from 'drizzle-orm/pg-core';
 
 export const userRoleEnum = pgEnum('user_role', ['ALUNO', 'PROFESSOR', 'ADMIN']);
+export const userSyncModeEnum = pgEnum('user_sync_mode', [
+  'NONE',
+  'ERP',
+  'HYBRID',
+]);
 
 export const usersTable = pgTable('users', {
   id: uuid('id').primaryKey(),
-  externalId: uuid("external_id").unique(),
-  name: varchar('name', { length: 255 }).notNull(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
+
+  externalId: uuid('external_id').unique(),
+
+  firstName: varchar('first_name').notNull(),
+  lastName: varchar('last_name').notNull(),
+
   role: userRoleEnum('role').notNull(),
+
+  syncMode: userSyncModeEnum('sync_mode')
+    .notNull()
+    .default('NONE'),
+
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdateFn(() => new Date()),
 });
