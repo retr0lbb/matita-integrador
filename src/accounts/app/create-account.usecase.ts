@@ -1,10 +1,10 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
-import { USER_REPOSITORY, type UserRepository } from "../../users/domain/user.repository";
-import { Account } from "../domain/account.entity";
+import { Inject, Injectable } from "@nestjs/common";
 import { Email } from "../../shared/domains/value-objects/email.vo";
+import { USER_REPOSITORY, type UserRepository } from "../../users/domain/user.repository";
+import { UserNotFoundError } from "../../users/domain/user-not-found.error";
+import { Account } from "../domain/account.entity";
+import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
 import { AccountStatus } from "../domain/value-objects/account-status.vo";
-
 
 
 @Injectable()
@@ -19,7 +19,7 @@ export class CreateUserAccountUseCase{
         const user = await this.userRepository.findById(userId)
 
         if(!user){
-            throw new NotFoundException("User not found")
+            throw new UserNotFoundError()
         }
 
         const possibleEmailString = `${user.firstName.toLowerCase().trim().replace(" ", "")}.${user.lastName.toLowerCase().trim().replace(" ", "")}@aluno.edu.com.br`

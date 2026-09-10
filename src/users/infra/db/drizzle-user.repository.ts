@@ -1,11 +1,11 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { SyncMode, User } from "../../domain/user.entity";
-import { UserRepository } from "../../domain/user.repository";
-import { DRIZZLE } from "../../../database/providers/drizzle.provider";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { usersTable } from "../../../database/schemas/userSchema";
+import { Inject, Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { UserRole } from "../../domain/value-objects/user-role";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { DRIZZLE } from "../../../database/providers/drizzle.provider";
+import { usersTable } from "../../../database/schemas/userSchema";
+import { SyncMode, User } from "../../domain/user.entity";
+import type { UserRepository } from "../../domain/user.repository";
+import type { UserRole } from "../../domain/value-objects/user-role";
 
 @Injectable()
 export class DrizzleUserRepository implements UserRepository{
@@ -27,7 +27,7 @@ export class DrizzleUserRepository implements UserRepository{
             .where(eq(usersTable.id, id))
         
         if(!user){
-            throw new NotFoundException("User not found")        
+            return null
         }
 
         return User.convertFromDb({
