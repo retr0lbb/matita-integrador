@@ -6,7 +6,7 @@ import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { usersTable } from "../../../database/schemas";
 import { eq } from "drizzle-orm";
 import { NotFoundError } from "rxjs";
-import { UserRole } from "../../domain/user-role";
+import { UserRole } from "../../domain/value-objects/user-role";
 import { UserModule } from "../../user.module";
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
-import { UserRole } from "../../domain/user-role";
+import { UserRole } from "../../domain/value-objects/user-role";
 import { User } from "../../domain/user.entity";
 import { USER_REPOSITORY, type UserRepository } from "../../domain/user.repository";
 

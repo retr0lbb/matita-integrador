@@ -1,4 +1,4 @@
-import { UserRole } from "./user-role";
+import { UserRole } from "./value-objects/user-role";
 
 type ConversionPayload = {
     id: string
