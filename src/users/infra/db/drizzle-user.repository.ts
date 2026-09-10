@@ -5,9 +5,7 @@ import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { usersTable } from "../../../database/schemas";
 import { eq } from "drizzle-orm";
-import { NotFoundError } from "rxjs";
 import { UserRole } from "../../domain/value-objects/user-role";
-import { UserModule } from "../../user.module";
 
 @Injectable()
 export class DrizzleUserRepository implements UserRepository{

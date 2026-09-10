@@ -6,7 +6,15 @@ type AccountConversionPayload = {
     id: string,
     googleExternalId: string | null,
     userId: string,
-    googleEmailAddress: string,
+    googleEmailAddress: Email,
+    createdAt: Date,
+    status: AccountStatus
+}
+
+type AccountCreatePayload = {
+    googleExternalId: string | null,
+    userId: string,
+    googleEmailAddress: string
     createdAt: Date,
     status: AccountStatus
 }
@@ -21,7 +29,7 @@ export class Account {
         private _status: AccountStatus
     ){}
 
-    static create(payload: Omit<AccountConversionPayload, "id" | "googleExternalId">){
+    static create(payload: AccountCreatePayload){
         const email = Email.create(payload.googleEmailAddress)
         const id = randomUUID()
         return new Account(id, null, payload.userId, email, payload.createdAt, AccountStatus.PENDING)
@@ -32,7 +40,7 @@ export class Account {
             payload.id, 
             payload.googleExternalId, 
             payload.userId, 
-            Email.create(payload.googleEmailAddress), 
+            payload.googleEmailAddress, 
             payload.createdAt,
             payload.status
         )
