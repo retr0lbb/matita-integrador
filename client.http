@@ -38,3 +38,13 @@ Content-Type: application/json
   "address": null,
   "externalId": "1e91311d-f082-42ce-9a9d-c7a8cfbb2710"
 }
+
+###
+POST {{baseUrl}}/unit/82dbae8c-1663-4c6b-b127-dddf12960c4f/classroom
+Content-Type: application/json
+
+{
+  "externalId": null,
+  "title": "5 ano B",
+  "location": null
+}
