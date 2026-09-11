@@ -27,3 +27,14 @@ Content-Type: application/json
   "name": "maplebear",
   "apiKey": "f7a8442f-4ac5-4659-894f-d8663800b521"
 }
+
+###
+POST {{baseUrl}}/unit
+Content-Type: application/json
+
+{
+  "institutionId": "f2d31935-3753-4e9e-9409-2285de0a2ea3",
+  "alias": "Maplebear Capão Redondo",
+  "address": null,
+  "externalId": "1e91311d-f082-42ce-9a9d-c7a8cfbb2710"
+}

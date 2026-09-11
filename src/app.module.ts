@@ -4,6 +4,7 @@ import { DatabaseModule } from "./database/database.module";
 import { ConfigModule } from "@nestjs/config";
 import { AccountModule } from "./accounts/accounts.module";
 import { InstitutionModule } from "./institutions/instutution.module";
+import { UnitModule } from "./unit/unit.module";
 
 @Module({
   imports: 
@@ -12,6 +13,7 @@ import { InstitutionModule } from "./institutions/instutution.module";
     DatabaseModule,
     AccountModule, 
     InstitutionModule,
+    UnitModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
