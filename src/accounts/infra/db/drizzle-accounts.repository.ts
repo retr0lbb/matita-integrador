@@ -3,7 +3,7 @@ import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { AccountRepository } from "../../domain/account.repository";
 import { Account } from "../../domain/account.entity";
-import { accountTable } from "../../../database/schemas/accountShema";
+import { accountTable } from "../../../database/schemas/accountSchema";
 import { eq } from "drizzle-orm";
 import { Email } from "../../../shared/domains/value-objects/email.vo";
 import { AccountStatus } from "../../domain/value-objects/account-status.vo";
