@@ -18,3 +18,12 @@ Content-Type: application/json
 {
   "userId": "7565ad43-17ce-41ac-aaf8-511bddf4bf29"
 }
+
+###
+POST {{baseUrl}}/institution
+Content-Type: application/json
+
+{
+  "name": "maplebear",
+  "apiKey": "f7a8442f-4ac5-4659-894f-d8663800b521"
+}
