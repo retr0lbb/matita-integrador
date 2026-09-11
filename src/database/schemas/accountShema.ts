@@ -6,6 +6,7 @@ export const accountStatus = pgEnum("account_status", [
   "CREATED",
   "BLOCKED",
   "WARNING",
+  "DEACTIVATED"
 ]);
 
 export const accountTable = pgTable("accounts", {

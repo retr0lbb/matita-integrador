@@ -2,5 +2,6 @@ export enum AccountStatus{
     PENDING = "PENDING",
     CREATED = "CREATED",
     BLOCKED = "BLOCKED",
-    WARNING = "WARNING"
+    WARNING = "WARNING",
+    DEACTIVATED= "DEACTIVATED"
 }
