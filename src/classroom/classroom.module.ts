@@ -7,6 +7,8 @@ import { CLASSROOM_REPOSITORY } from "./domain/classroom.repository";
 import { DrizzleClassroomRepository } from "./infra/drizzle-classroom.repository";
 import { UNIT_REPOSITORY } from "../unit/domain/unity.repository";
 import { DrizzleUnitRepository } from "../unit/infra/drizzle-unity.repository";
+import { AddUserToClassRoom } from "./domain/useCases/add-user-to-classroom.usecase";
+import { USER_CLASSROOM_REPOSITORY } from "./domain/user-classroom.repository";
 
 
 
@@ -14,6 +16,7 @@ import { DrizzleUnitRepository } from "../unit/infra/drizzle-unity.repository";
     imports: [DatabaseModule, UnitModule],
     providers: [
         CreateClassRoomUseCase,
+        AddUserToClassRoom,
         {
             provide: CLASSROOM_REPOSITORY,
             useClass: DrizzleClassroomRepository,
@@ -21,6 +24,10 @@ import { DrizzleUnitRepository } from "../unit/infra/drizzle-unity.repository";
         {
             provide: UNIT_REPOSITORY,
             useClass: DrizzleUnitRepository
+        },
+        {
+            provide: USER_CLASSROOM_REPOSITORY,
+            useClass: DrizzleClassroomRepository
         }
     ],
     controllers: [ClassroomController]
