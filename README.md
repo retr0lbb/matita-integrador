@@ -100,8 +100,9 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 ## BACKLOG
 
-- [ ] FIX FIND BY EMAIL ON USER USECASE
+- [x] add classrooms module
+- [x] learn more about hexagonal arch
+- [ ] test the add user to class integration
+- [ ] create remove user to classroom
 - [ ] add hash column to user model
-- [ ] add classrooms module
 - [ ] add google integration
-- [ ] learn more about hexagonal arch
