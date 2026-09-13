@@ -6,6 +6,7 @@ import { AccountModule } from "./accounts/accounts.module";
 import { InstitutionModule } from "./institutions/instutution.module";
 import { UnitModule } from "./unit/unit.module";
 import { ClassRoomModule } from "./classroom/classroom.module";
+import { SyncModule } from './sync/sync.module';
 
 @Module({
   imports: 
@@ -19,6 +20,7 @@ import { ClassRoomModule } from "./classroom/classroom.module";
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    SyncModule,
   ],
   controllers: [],
   providers: []

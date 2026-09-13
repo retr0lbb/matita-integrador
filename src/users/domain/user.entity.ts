@@ -34,7 +34,8 @@ export class User {
         private readonly _role: UserRole,
         private _syncMode: SyncMode,
         private readonly _createdAt: Date,
-        private _updatedAt: Date | null
+        private _updatedAt: Date | null,
+        private _hash: string | null
     ){}
 
     static create(payload: CreatePayload){
@@ -50,6 +51,7 @@ export class User {
             payload.role,
             payload.syncMode,
             new Date(),
+            null,
             null
         )
     }
@@ -63,7 +65,8 @@ export class User {
             payload.role,
             payload.syncMode,
             payload.createdAt,
-            payload.updatedAt
+            payload.updatedAt,
+            null
         )
     }
 
@@ -98,5 +101,9 @@ export class User {
 
     get updatedAt(): Date | null{
         return this._updatedAt
+    }
+
+    get hash(): string | null{
+        return this._hash
     }
 }
