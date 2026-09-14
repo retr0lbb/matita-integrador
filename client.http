@@ -5,8 +5,8 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Gyro",
-  "lastName": "Zeppeli",
+  "firstName": "Rimuro",
+  "lastName": "Nagatoro",
   "role": "ALUNO",
   "syncMode": "AUTO"
 }
@@ -16,7 +16,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "ae7db410-23c3-47ec-867d-ce2a5b743ed4"
+  "userId": "7e00c60f-be70-45ee-9f0b-769eba01eceb"
 }
 
 ###
@@ -33,18 +33,17 @@ POST {{baseUrl}}/unit
 Content-Type: application/json
 
 {
-  "institutionId": "f2d31935-3753-4e9e-9409-2285de0a2ea3",
+  "institutionId": "2416fa92-5c7a-44b9-af69-d9bc2696e59f",
   "alias": "Maplebear Capão Redondo",
   "address": null,
   "externalId": "1e91311d-f082-42ce-9a9d-c7a8cfbb2710"
 }
 
 ###
-POST {{baseUrl}}/unit/82dbae8c-1663-4c6b-b127-dddf12960c4f/classroom
+POST {{baseUrl}}/unit/bd7ed514-58a3-4f5c-84c1-c832ad1c05c5/classroom
 Content-Type: application/json
 
 {
-  "externalId": null,
   "title": "5 ano B",
   "location": null
 }

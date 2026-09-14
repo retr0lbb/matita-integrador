@@ -16,7 +16,7 @@ export const classRoomStatus = pgEnum("classroom_status", [
 
 export const classRoomTable = pgTable("classrooms", {
     id: uuid().defaultRandom().primaryKey(),
-    externalId: uuid("external_id").unique(),
+    externalId: varchar("external_id").unique(),
     unitId: uuid("unit_id").notNull().references(() => unitTable.id),
     title: varchar().notNull(),
     location: varchar(),
