@@ -6,7 +6,8 @@ import { DrizzleAccountRepository } from "./infra/db/drizzle-accounts.repository
 import { AccountsController } from "./presentation/accounts.controller";
 import { USER_REPOSITORY } from "../users/domain/user.repository";
 import { DrizzleUserRepository } from "../users/infra/db/drizzle-user.repository";
-
+import { GOOGLE_ACCOUNT_PROVIDER } from "./domain/google-account-provider";
+import { GoogleAccountAdapter } from "./infra/google-account-provider.adapter";
 
 @Module({
     imports: [DatabaseModule],
@@ -19,6 +20,10 @@ import { DrizzleUserRepository } from "../users/infra/db/drizzle-user.repository
         {
             provide: USER_REPOSITORY,
             useClass: DrizzleUserRepository
+        },
+        {
+            provide: GOOGLE_ACCOUNT_PROVIDER,
+            useClass: GoogleAccountAdapter
         }
     ]
 })
