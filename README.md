@@ -103,7 +103,8 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [x] add classrooms module.
 - [x] learn more about hexagonal arch.
 - [x] create google service to classroom
-- [ ] test the add user to class integration.
+- [x] remove addUserToClassroom god function on drizzle classroom repository and substitute to
+repository of userToclassroom(save and get)
 - [ ] create remove user to classroom.
 - [ ] add hash column to user model.
 - [ ] add hash integration with lex.
@@ -126,8 +127,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [ ] see if i can make an google extractor. to add on sync engine
 - [ ] add to database classroom owner id as user relation
 - [ ] create new ports for better querying
-- [ ] remove addUserToClassroom god function on drizzle classroom repository and substitute to
-repository of userToclassroom(save and get)
+
 
 
 
