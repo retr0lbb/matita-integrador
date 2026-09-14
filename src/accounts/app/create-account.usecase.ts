@@ -5,13 +5,15 @@ import { UserNotFoundError } from "../../users/domain/user-not-found.error";
 import { Account } from "../domain/account.entity";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
 import { AccountStatus } from "../domain/value-objects/account-status.vo";
+import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../domain/google-account-provider";
 
 
 @Injectable()
 export class CreateUserAccountUseCase{
     constructor(
         @Inject(ACCOUNT_REPOSITORY) private readonly accountsRepository: AccountRepository,
-        @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository
+        @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository,
+        @Inject(GOOGLE_ACCOUNT_PROVIDER) private readonly googleAccount: GoogleAccountProviderClient
     ){}
 
     async execute(userId: string){
@@ -20,13 +22,18 @@ export class CreateUserAccountUseCase{
 
         if(!user){
             throw new UserNotFoundError()
-        }
+        } 
 
-        const possibleEmailString = `${user.firstName.toLowerCase().trim().replace(" ", "")}.${user.lastName.toLowerCase().trim().replace(" ", "")}@aluno.edu.com.br`
+        const possibleEmailString = `${user.firstName.toLowerCase().trim().replace(" ", "")}.${user.lastName.toLowerCase().trim().replace(" ", "")}@aluno.gedu.demo.matita.com.br`
 
         const emailEntity = Email.create(possibleEmailString)
 
-        const googleExternalId = "123123" //call Google client
+        const googleExternalId = await this.googleAccount.createAccount({
+            email: emailEntity.getValue(),
+            familyName: user.lastName,
+            givenName: user.firstName,
+            orgUnitPath: "/Integrador-teste/Maplebear - Krypton/ALUNOS"
+        })
 
         const accountEntity = Account.create({
             userId: user.id, 

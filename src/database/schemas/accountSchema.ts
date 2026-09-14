@@ -11,7 +11,7 @@ export const accountStatus = pgEnum("account_status", [
 
 export const accountTable = pgTable("accounts", {
   id: uuid("id").primaryKey(),
-  externalId: uuid("external_id").unique(),
+  externalId: varchar("external_id").unique(),
   userId: uuid("user_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),

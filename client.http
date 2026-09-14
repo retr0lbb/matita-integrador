@@ -5,10 +5,10 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Henrique",
-  "lastName": "Sampaio",
+  "firstName": "Gyro",
+  "lastName": "Zeppeli",
   "role": "ALUNO",
-  "syncMode": "NONE"
+  "syncMode": "AUTO"
 }
 
 ###
@@ -16,7 +16,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "7565ad43-17ce-41ac-aaf8-511bddf4bf29"
+  "userId": "ae7db410-23c3-47ec-867d-ce2a5b743ed4"
 }
 
 ###

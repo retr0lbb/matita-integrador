@@ -10,14 +10,14 @@ export class GoogleAccountAdapter implements GoogleAccountProviderClient {
     private readonly directory: admin_directory_v1.Admin; //tipar isso tambem
 
     constructor(private readonly config: ConfigService){
-        const json = config.getOrThrow<string>(process.env.GOOGLE_API_JSON!)
+        const json = config.getOrThrow<string>("GOOGLE_API_JSON")
         const creds = JSON.parse(json) //tipar essa porra dqui
 
         const auth = new google.auth.JWT({
             email: creds.client_email,
             key: creds.private_key,
             scopes: ['https://www.googleapis.com/auth/admin.directory.user'],
-            subject: config.get<string>(process.env.GOOGLE_CLIENT_EMAIL!),
+            subject: config.get<string>("GOOGLE_CLIENT_EMAIL"),
         });
 
         this.directory = google.admin({version: "directory_v1", auth})
@@ -36,6 +36,7 @@ export class GoogleAccountAdapter implements GoogleAccountProviderClient {
                 orgUnitPath: input.orgUnitPath ?? "/"
             }
         })
+        console.log(response.data)
         return response.data.id!
     }
 

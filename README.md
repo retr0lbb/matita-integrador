@@ -113,3 +113,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [ ] create Cron job for sync fetch lex full 24/7 dayli connection
 - [ ] !!!!!!! Se if the ENUMS for sync status are working as intended
 - [ ] add google integration
+- [ ] add custom domain (internet) to organization
+- [ ] link student to institution (do it now)
+- [ ] link unit to user too
+- [ ] think if user should be held main or account should be held main

@@ -34,7 +34,7 @@ export class Account {
     const id = randomUUID();
     return new Account(
       id,
-      null,
+      payload.googleExternalId,
       payload.userId,
       payload.googleEmailAddress,
       payload.createdAt,

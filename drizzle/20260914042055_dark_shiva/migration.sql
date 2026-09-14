@@ -1,0 +1,2 @@
+ALTER TABLE "accounts" ALTER COLUMN "external_id" SET DATA TYPE varchar USING "external_id"::varchar;--> statement-breakpoint
+CREATE INDEX "userid_classroomid" ON "classroom_users" ("classroom_id","user_id");
