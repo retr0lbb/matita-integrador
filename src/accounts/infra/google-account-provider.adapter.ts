@@ -23,6 +23,21 @@ export class GoogleAccountAdapter implements GoogleAccountProviderClient {
         this.directory = google.admin({version: "directory_v1", auth})
     }
 
+    async findAccount(key: string): Promise<{id: string, email: string} | null>{ //key can be both id and email perfect for repeated email adresses
+        try {
+            const response = await this.directory.users.get({
+                userKey: key
+            })
+
+            return { id: response.data.id!, email: response.data.primaryEmail! };
+        } catch (error : any) {
+            if (error.code === 404 || error.response?.status === 404) {
+                return null; // não existe — não é erro de verdade, é resultado esperado
+            }
+            throw error; // qualquer outro erro (403, 500, etc.) você quer saber
+        }
+    }
+
     async createAccount(input: CreateGoogleAccountInput): Promise<string> {
         const response = await this.directory.users.insert({
             requestBody: {

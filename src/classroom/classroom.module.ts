@@ -11,6 +11,12 @@ import { AddUserToClassRoom } from "./domain/useCases/add-user-to-classroom.usec
 import { USER_CLASSROOM_REPOSITORY } from "./domain/user-classroom.repository";
 import { GOOGLE_CLASSROOM_CLIENT } from "./domain/google-classroom-client";
 import { GoogleClassroomAdapter } from "./infra/google-classroom-adapter";
+import { GOOGLE_ACCOUNT_PROVIDER } from "../accounts/domain/google-account-provider";
+import { GoogleAccountAdapter } from "../accounts/infra/google-account-provider.adapter";
+import { DrizzleUserRepository } from "../users/infra/db/drizzle-user.repository";
+import { USER_REPOSITORY } from "../users/domain/user.repository";
+import { ACCOUNT_REPOSITORY } from "../accounts/domain/account.repository";
+import { DrizzleAccountRepository } from "../accounts/infra/db/drizzle-accounts.repository";
 
 @Module({
     imports: [DatabaseModule, UnitModule],
@@ -32,6 +38,18 @@ import { GoogleClassroomAdapter } from "./infra/google-classroom-adapter";
         {
             provide: GOOGLE_CLASSROOM_CLIENT,
             useClass: GoogleClassroomAdapter
+        },
+        {
+            provide: GOOGLE_ACCOUNT_PROVIDER,
+            useClass: GoogleAccountAdapter
+        },
+        {
+            provide: USER_REPOSITORY,
+            useClass: DrizzleUserRepository
+        },
+        {
+            provide: ACCOUNT_REPOSITORY,
+            useClass: DrizzleAccountRepository
         }
     ],
     controllers: [ClassroomController]

@@ -1,0 +1,1 @@
+ALTER TABLE "classrooms" ALTER COLUMN "external_id" SET DATA TYPE varchar USING "external_id"::varchar;

@@ -1,15 +1,19 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../classroom.repository";
 import { UNIT_REPOSITORY, type UnitRepository } from "../../../unit/domain/unity.repository";
 import { Classroom, ClassRoomShift, ClassroomStatus } from "../classroom.entity";
 import { randomUUID } from "crypto";
 import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../google-classroom-client";
-import { ConfigService } from "@nestjs/config";
+import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../../../accounts/domain/google-account-provider";
+import { ACCOUNT_REPOSITORY, type AccountRepository } from "../../../accounts/domain/account.repository";
+import { USER_REPOSITORY, type UserRepository } from "../../../users/domain/user.repository";
+import { UserRole } from "../../../users/domain/value-objects/user-role";
 
 
 export type CreateClassRoomUseCasePayload = {
     title: string,
-    location: string | null,
+    location?: string,
+    ownerAccountId: string,
     shift?: ClassRoomShift,
     status?: ClassroomStatus,
 }
@@ -19,8 +23,10 @@ export class CreateClassRoomUseCase{
     constructor(
         @Inject(CLASSROOM_REPOSITORY) private readonly classRoomRepository: ClassRoomRepository,
         @Inject(UNIT_REPOSITORY) private readonly unityRepository: UnitRepository,
+        @Inject(ACCOUNT_REPOSITORY) private readonly accountRepository: AccountRepository,
+        @Inject(GOOGLE_ACCOUNT_PROVIDER) private readonly googleAccountProvider: GoogleAccountProviderClient,
         @Inject(GOOGLE_CLASSROOM_CLIENT) private readonly classroomClient: GoogleClassroomClient,
-        private readonly configService: ConfigService
+        @Inject(USER_REPOSITORY) private readonly userRepository: UserRepository
     ){}
 
     async execute(unitId: string, payload: CreateClassRoomUseCasePayload){
@@ -33,15 +39,41 @@ export class CreateClassRoomUseCase{
         const shift = payload.shift? ClassRoomShift[payload.shift]: ClassRoomShift.MORNING
         const status = payload.status? ClassroomStatus[payload.status]: ClassroomStatus.ACTIVE
 
+        const account = await this.accountRepository.findById(payload.ownerAccountId)
+
+        if(!account){
+            throw new Error("You must provide a valid account")
+        }
+
+        const userFromAccount = await this.userRepository.findById(account.userId)
+
+        if(!userFromAccount){
+            throw new Error("User not found")
+        }
+
+        if(userFromAccount.role === UserRole.ALUNO){
+            throw new ForbiddenException("User from role ALUNO cannot create a classroom")
+        }
+
+        if(!account.googleExternalId){
+            throw new Error("Cannot create a classroom without google account")
+        }
+
+        const googleAccount = await this.googleAccountProvider.findAccount(account.googleExternalId)
+
+        if(googleAccount === null){
+            throw new NotFoundException("Google Account not found")
+        }
+
         const googleClassRoomId = await this.classroomClient.createCourse({
             name: payload.title, 
-            ownerEmail: this.configService.getOrThrow<string>("GOOGLE_CLIENT_EMAIL")
+            ownerEmail: googleAccount.email
         })
 
         const classroom = Classroom.create({
             externalId: googleClassRoomId,
             id: randomUUID(),
-            location: payload.location,
+            location: payload.location ?? null,
             shift,
             status,
             title: payload.title,

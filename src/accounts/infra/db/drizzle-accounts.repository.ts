@@ -11,7 +11,9 @@ import { AccountStatus } from "../../domain/value-objects/account-status.vo";
 
 @Injectable()
 export class DrizzleAccountRepository implements AccountRepository{
-    constructor(@Inject(DRIZZLE) private readonly db: NodePgDatabase){}
+    constructor(
+        @Inject(DRIZZLE) private readonly db: NodePgDatabase,
+    ){}
 
     async save(account: Account): Promise<void> {
         await this.db.insert(accountTable).values({

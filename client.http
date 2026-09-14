@@ -44,6 +44,6 @@ POST {{baseUrl}}/unit/bd7ed514-58a3-4f5c-84c1-c832ad1c05c5/classroom
 Content-Type: application/json
 
 {
-  "title": "5 ano B",
-  "location": null
+  "title": "7 ano B inglês",
+  "ownerAccountId": "4cbc6add-b0d5-4b92-9308-45cc8730037e"
 }

@@ -119,3 +119,5 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [ ] think if user should be held main or account should be held main.
 - [ ] finish the findById google service.
 - [ ] create google service to classroom
+- [ ] verify if course has to need location and turns?
+- [ ] add to institution provider email, and account linkkage
