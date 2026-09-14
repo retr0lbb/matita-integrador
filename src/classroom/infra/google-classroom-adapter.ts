@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { GoogleClassroomClient } from "../domain/google-classroom-client";
+import { GoogleClassroomClient } from "../domain/ports/google-classroom-client";
 import { ConfigService } from "@nestjs/config";
 import { classroom_v1, google } from "googleapis";
 

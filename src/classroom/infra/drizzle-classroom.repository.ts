@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { ClassRoomRepository } from "../domain/classroom.repository";
+import { ClassRoomRepository } from "../domain/ports/classroom.repository";
 import { Classroom, ClassRoomShift, ClassroomStatus } from "../domain/classroom.entity";
 import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -7,7 +7,6 @@ import { classRoomTable } from "../../database/schemas/classRoomSchema";
 import { and, eq } from "drizzle-orm";
 import { UserClassRepository } from "../domain/user-classroom.repository";
 import { usersTable } from "../../database/schemas/userSchema";
-import { transcode } from "buffer";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
 
 

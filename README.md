@@ -102,6 +102,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 - [x] add classrooms module.
 - [x] learn more about hexagonal arch.
+- [x] create google service to classroom
 - [ ] test the add user to class integration.
 - [ ] create remove user to classroom.
 - [ ] add hash column to user model.
@@ -118,6 +119,8 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [ ] link unit to user too.
 - [ ] think if user should be held main or account should be held main.
 - [ ] finish the findById google service.
-- [ ] create google service to classroom
 - [ ] verify if course has to need location and turns?
 - [ ] add to institution provider email, and account linkkage
+- [ ] correct the flux of google things creation local -> google -> update local
+- [ ] add queues (BullMq or Redis)
+- [ ] see if i can make an google extractor. to add on sync engine

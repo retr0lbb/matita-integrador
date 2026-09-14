@@ -1,5 +1,4 @@
-import { User } from "../../users/domain/user.entity";
-import { Classroom } from "./classroom.entity";
+import { Classroom } from "../classroom.entity";
 
 export const CLASSROOM_REPOSITORY = Symbol('CLASSROOM_REPOSITORY');
 

@@ -1,9 +1,9 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../classroom.repository";
+import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../ports/classroom.repository";
 import { UNIT_REPOSITORY, type UnitRepository } from "../../../unit/domain/unity.repository";
 import { Classroom, ClassRoomShift, ClassroomStatus } from "../classroom.entity";
 import { randomUUID } from "crypto";
-import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../google-classroom-client";
+import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../ports/google-classroom-client";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../../../accounts/domain/google-account-provider";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../../../accounts/domain/account.repository";
 import { USER_REPOSITORY, type UserRepository } from "../../../users/domain/user.repository";
