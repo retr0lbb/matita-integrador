@@ -5,8 +5,8 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Rimuro",
-  "lastName": "Nagatoro",
+  "firstName": "Ryomen",
+  "lastName": "Sukuna",
   "role": "ALUNO",
   "syncMode": "AUTO"
 }
@@ -16,7 +16,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "7e00c60f-be70-45ee-9f0b-769eba01eceb"
+  "userId": "7e15e6dd-f3a8-45b1-a52e-925da0d10d4c"
 }
 
 ###
@@ -46,4 +46,12 @@ Content-Type: application/json
 {
   "title": "7 ano B inglês",
   "ownerAccountId": "4cbc6add-b0d5-4b92-9308-45cc8730037e"
+}
+
+###
+POST {{baseUrl}}/classroom/1e1ea83b-6119-4462-b181-8c3c643865ff/add
+Content-Type: application/json
+
+{
+  "userId": "7e15e6dd-f3a8-45b1-a52e-925da0d10d4c"  
 }

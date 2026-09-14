@@ -124,3 +124,15 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [ ] correct the flux of google things creation local -> google -> update local
 - [ ] add queues (BullMq or Redis)
 - [ ] see if i can make an google extractor. to add on sync engine
+- [ ] add to database classroom owner id as user relation
+- [ ] create new ports for better querying
+- [ ] remove addUserToClassroom god function on drizzle classroom repository and substitute to
+repository of userToclassroom(save and get)
+
+
+
+## FUTURE FEATURES
+- [ ] automatically integrate with calendar from google
+- [ ] add microsoft provider
+- [ ] add login options to admins
+- [ ] automatically manage drive

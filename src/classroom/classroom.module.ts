@@ -17,6 +17,7 @@ import { DrizzleUserRepository } from "../users/infra/db/drizzle-user.repository
 import { USER_REPOSITORY } from "../users/domain/user.repository";
 import { ACCOUNT_REPOSITORY } from "../accounts/domain/account.repository";
 import { DrizzleAccountRepository } from "../accounts/infra/db/drizzle-accounts.repository";
+import { CLASSROOM_OWNER_QUERY } from "./domain/ports/classroom-owner.query";
 
 @Module({
     imports: [DatabaseModule, UnitModule],
@@ -50,6 +51,10 @@ import { DrizzleAccountRepository } from "../accounts/infra/db/drizzle-accounts.
         {
             provide: ACCOUNT_REPOSITORY,
             useClass: DrizzleAccountRepository
+        },
+        {
+            provide: CLASSROOM_OWNER_QUERY,
+            useClass: DrizzleClassroomRepository
         }
     ],
     controllers: [ClassroomController]

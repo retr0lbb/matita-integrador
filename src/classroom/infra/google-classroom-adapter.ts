@@ -25,6 +25,16 @@ export class GoogleClassroomAdapter implements GoogleClassroomClient{
         this.classroom = google.classroom({version: "v1", auth})
     }
 
+    async findClassroom(courseId: string): Promise<boolean> {
+        const course = await this.classroom.courses.get({
+           id: courseId
+        })
+
+        console.log(course.data)
+        
+        return course.ok
+    }
+
     async createCourse(input: { name: string; ownerEmail: string; section?: string; }): Promise<string> {
         const response = await this.classroom.courses.create({
             requestBody: {

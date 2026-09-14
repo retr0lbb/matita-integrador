@@ -8,13 +8,40 @@ import { and, eq } from "drizzle-orm";
 import { UserClassRepository } from "../domain/ports/user-classroom.repository";
 import { usersTable } from "../../database/schemas/userSchema";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
+import { ClassroomOwner, ClassroomOwnerQuery } from "../domain/ports/classroom-owner.query";
+import { accountTable } from "../../database/schemas/accountSchema";
+import { UserRole } from "../../users/domain/value-objects/user-role";
 
 
 @Injectable()
-export class DrizzleClassroomRepository implements ClassRoomRepository, UserClassRepository{
+export class DrizzleClassroomRepository implements ClassRoomRepository, 
+UserClassRepository, ClassroomOwnerQuery{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
+
+    async findByUserId(userId: string): Promise<ClassroomOwner | null> {
+        const [user] = await this.db
+        .select()
+        .from(usersTable)
+        .leftJoin(accountTable, eq(usersTable.id, accountTable.userId))
+        .where(eq(usersTable.id, userId))
+
+        if(!user.accounts || user.accounts.externalId === null){
+            throw new Error("Account not found")
+        }
+
+        if(!user.users){
+            throw new Error("User not found")
+        }
+
+        return {
+            accountId: user.accounts.id,
+            googleExternalId: user.accounts.externalId,
+            role: user.users.role as UserRole,
+            userId: user.users.id
+        }
+    }
 
     async save(classroom: Classroom): Promise<void> {
         await this.db.insert(classRoomTable).values({
