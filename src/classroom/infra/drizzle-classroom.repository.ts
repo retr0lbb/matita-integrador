@@ -5,7 +5,7 @@ import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { classRoomTable } from "../../database/schemas/classRoomSchema";
 import { and, eq } from "drizzle-orm";
-import { UserClassRepository } from "../domain/user-classroom.repository";
+import { UserClassRepository } from "../domain/ports/user-classroom.repository";
 import { usersTable } from "../../database/schemas/userSchema";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
 

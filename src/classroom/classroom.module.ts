@@ -8,7 +8,7 @@ import { DrizzleClassroomRepository } from "./infra/drizzle-classroom.repository
 import { UNIT_REPOSITORY } from "../unit/domain/unity.repository";
 import { DrizzleUnitRepository } from "../unit/infra/drizzle-unity.repository";
 import { AddUserToClassRoom } from "./domain/useCases/add-user-to-classroom.usecase";
-import { USER_CLASSROOM_REPOSITORY } from "./domain/user-classroom.repository";
+import { USER_CLASSROOM_REPOSITORY } from "./domain/ports/user-classroom.repository";
 import { GOOGLE_CLASSROOM_CLIENT } from "./domain/ports/google-classroom-client";
 import { GoogleClassroomAdapter } from "./infra/google-classroom-adapter";
 import { GOOGLE_ACCOUNT_PROVIDER } from "../accounts/domain/google-account-provider";

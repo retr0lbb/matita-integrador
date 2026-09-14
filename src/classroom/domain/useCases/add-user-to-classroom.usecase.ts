@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { USER_CLASSROOM_REPOSITORY, type UserClassRepository } from "../user-classroom.repository";
+import { USER_CLASSROOM_REPOSITORY, type UserClassRepository } from "../ports/user-classroom.repository";
 import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../ports/google-classroom-client";
 
 
