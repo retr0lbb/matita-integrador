@@ -105,6 +105,7 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [x] create google service to classroom
 - [x] remove addUserToClassroom god function on drizzle classroom repository and substitute to
 repository of userToclassroom(save and get)
+- [ ] correct the flux of google things creation local -> google -> update local
 - [ ] create remove user to classroom.
 - [ ] add hash column to user model.
 - [ ] add hash integration with lex.
@@ -122,7 +123,6 @@ repository of userToclassroom(save and get)
 - [ ] finish the findById google service.
 - [ ] verify if course has to need location and turns?
 - [ ] add to institution provider email, and account linkkage
-- [ ] correct the flux of google things creation local -> google -> update local
 - [ ] add queues (BullMq or Redis)
 - [ ] see if i can make an google extractor. to add on sync engine
 - [ ] add to database classroom owner id as user relation
