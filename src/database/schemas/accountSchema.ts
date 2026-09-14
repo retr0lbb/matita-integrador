@@ -3,10 +3,8 @@ import { usersTable } from "./userSchema";
 
 export const accountStatus = pgEnum("account_status", [
   "PENDING",
-  "CREATED",
-  "BLOCKED",
-  "WARNING",
-  "DEACTIVATED"
+  "ACTIVE",
+  "FAILED"
 ]);
 
 export const accountTable = pgTable("accounts", {

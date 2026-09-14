@@ -5,8 +5,8 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Ryomen",
-  "lastName": "Sukuna",
+  "firstName": "Yuta",
+  "lastName": "Okkotsu",
   "role": "ALUNO",
   "syncMode": "AUTO"
 }
@@ -16,7 +16,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "7e15e6dd-f3a8-45b1-a52e-925da0d10d4c"
+  "userId": "7134eb49-fe1b-4fee-8135-79d49a112eb9"
 }
 
 ###

@@ -87,4 +87,13 @@ export class Account {
   public get status(): AccountStatus {
     return this._status;
   }
+
+  activate(googleId: string){
+    this._googleExternalId = googleId
+    this._status = AccountStatus.ACTIVE
+  }
+
+  markAsFailed(){
+    this._status = AccountStatus.FAILED
+  }
 }

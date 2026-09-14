@@ -22,7 +22,26 @@ export class DrizzleAccountRepository implements AccountRepository{
             externalId: account.googleExternalId,
             status: account.status,
             userId: account.userId,
+        }).onConflictDoUpdate({
+            target: accountTable.id,
+            set: {
+                email: account.googleEmailAddress.getValue(),
+                externalId: account.googleExternalId,
+                status: account.status,
+                userId: account.userId
+            }
         })
+    }
+
+    async updateGoogleIdForAccount(account: Account): Promise<void> {
+        if(account.isLinkedToGoogle() === true){
+            throw new Error("Account is already connected")
+        }
+
+        await this.db.update(accountTable).set({
+            externalId: account.googleExternalId,
+            status: "ACTIVE"
+        }).where(eq(accountTable.id, account.id))
     }
 
     async findById(id: string): Promise<Account | null> {

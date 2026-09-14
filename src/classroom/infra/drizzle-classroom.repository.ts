@@ -5,7 +5,7 @@ import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { classRoomTable } from "../../database/schemas/classRoomSchema";
 import { and, eq } from "drizzle-orm";
-import { UserClassRepository } from "../domain/ports/user-classroom.repository";
+import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
 import { usersTable } from "../../database/schemas/userSchema";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
 import { ClassroomOwner, ClassroomOwnerQuery } from "../domain/ports/classroom-owner.query";
@@ -19,6 +19,13 @@ UserClassRepository, ClassroomOwnerQuery{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
+    
+    getUserToClassroom(userId: string, classroomId: string): Promise<UserClassroomRelation | null> {
+        throw new Error("Method not implemented.");
+    }
+    saveUserToClassroom(userId: string, classroomId: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
 
     async findByUserId(userId: string): Promise<ClassroomOwner | null> {
         const [user] = await this.db

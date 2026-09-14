@@ -7,4 +7,5 @@ export interface AccountRepository{
     findById(id: string): Promise<Account | null>
     findByProviderExternalId(id: string): Promise<Account | null>
     listAccount(): Promise<Account[]>
+    updateGoogleIdForAccount(account: Account): Promise<void>
 }

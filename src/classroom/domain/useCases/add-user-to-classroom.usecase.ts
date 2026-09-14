@@ -19,6 +19,13 @@ export class AddUserToClassRoom{
 
     async execute(userId: string, classRoomId: string){
         const data = await this.classroomQuery.findByUserId(userId)
+
+        const exists = await this.userToClassroom.getUserToClassroom(userId, classRoomId)
+
+        if(exists){
+            throw new Error("Relation already exists")
+        }
+
         if(!data){
             throw new Error("User and account not found")
         }
@@ -51,6 +58,6 @@ export class AddUserToClassRoom{
 
         await this.googleClassroom.addStudent(classRoom.externalId, userAccountExists.email)
 
-        await this.userToClassroom.addUserToClassRoom(data.userId, classRoom.id)
+        await this.userToClassroom.saveUserToClassroom(data.userId, classRoom.id)
     }
 }

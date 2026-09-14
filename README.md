@@ -127,6 +127,8 @@ repository of userToclassroom(save and get)
 - [ ] see if i can make an google extractor. to add on sync engine
 - [ ] add to database classroom owner id as user relation
 - [ ] create new ports for better querying
+- [ ] fix the new 2 methods on add user to classroom and get user to classroom
+- [ ] [IMPORTANT] add account linkage to tables
 
 
 
