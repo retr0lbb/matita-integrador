@@ -7,7 +7,7 @@ import { randomBytes } from "crypto";
 @Injectable()
 export class GoogleAccountAdapter implements GoogleAccountProviderClient {
 
-    private readonly directory: admin_directory_v1.Admin; //tipar isso tambem
+    private readonly directory: admin_directory_v1.Admin;
 
     constructor(private readonly config: ConfigService){
         const json = config.getOrThrow<string>("GOOGLE_API_JSON")
@@ -38,6 +38,10 @@ export class GoogleAccountAdapter implements GoogleAccountProviderClient {
         })
         console.log(response.data)
         return response.data.id!
+    }
+
+    async findAccountById(accountId: string): Promise<any> {
+        const account = this.directory.users.get()
     }
 
 }

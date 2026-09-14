@@ -10,4 +10,5 @@ export interface CreateGoogleAccountInput{
 
 export interface GoogleAccountProviderClient{
     createAccount(input: CreateGoogleAccountInput): Promise<string>
+    findAccountById(accountId: string): Promise<any>
 }

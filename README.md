@@ -100,20 +100,22 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 ## BACKLOG
 
-- [x] add classrooms module
-- [x] learn more about hexagonal arch
-- [ ] test the add user to class integration
-- [ ] create remove user to classroom
-- [ ] add hash column to user model
-- [ ] add hash integration with lex
-- [ ] create sync port and lex adapter
-- [ ] create fake lex payload data
-- [ ] create test for user creation
-- [ ] create general useCases for sync engine
-- [ ] create Cron job for sync fetch lex full 24/7 dayli connection
-- [ ] !!!!!!! Se if the ENUMS for sync status are working as intended
-- [ ] add google integration
-- [ ] add custom domain (internet) to organization
-- [ ] link student to institution (do it now)
-- [ ] link unit to user too
-- [ ] think if user should be held main or account should be held main
+- [x] add classrooms module.
+- [x] learn more about hexagonal arch.
+- [ ] test the add user to class integration.
+- [ ] create remove user to classroom.
+- [ ] add hash column to user model.
+- [ ] add hash integration with lex.
+- [ ] create sync port and lex adapter.
+- [ ] create fake lex payload data.
+- [ ] create test for user creation.
+- [ ] create general useCases for sync engine.
+- [ ] create Cron job for sync fetch lex full 24/7 dayli connection.
+- [ ] !!!!!!! Se if the ENUMS for sync status are working as intended.
+- [ ] add google integration.
+- [ ] add custom domain (internet) to organization.
+- [ ] link student to institution (do it now).
+- [ ] link unit to user too.
+- [ ] think if user should be held main or account should be held main.
+- [ ] finish the findById google service.
+- [ ] create google service to classroom
