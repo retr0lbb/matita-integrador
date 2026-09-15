@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import { usersTable } from "../../../database/schemas/userSchema";
-import { SyncMode, User } from "../../domain/user.entity";
+import { User } from "../../domain/user.entity";
 import type { UserRepository } from "../../domain/user.repository";
 import type { UserRole } from "../../domain/value-objects/user-role";
 
@@ -16,8 +16,7 @@ export class DrizzleUserRepository implements UserRepository{
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
-            role: user.role,
-            syncMode: SyncMode.NONE,
+            role: user.role
         })
     }
 
@@ -30,14 +29,12 @@ export class DrizzleUserRepository implements UserRepository{
             return null
         }
 
-        return User.convertFromDb({
+        return User.reconstitute({
+            id: user.id,
+            createdAt: user.createdAt,
             firstName: user.firstName,
             lastName: user.lastName,
-            id: user.id, 
-            externalId: user.externalId,
             role: user.role as UserRole,
-            syncMode: user.syncMode as SyncMode,
-            createdAt: user.createdAt,
             updatedAt: user.updatedAt
         })
     }

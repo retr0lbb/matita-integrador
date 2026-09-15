@@ -1,41 +1,28 @@
 import { UserRole } from "./value-objects/user-role";
 
-type ConversionPayload = {
-    id: string,
-    externalId: string | null,
-    firstName: string,
-    lastName: string,
-    role: UserRole,
-    syncMode: SyncMode,
-    createdAt: Date,
-    updatedAt: Date 
-}
-
 type CreatePayload = {
-    externalId: string | null,
     firstName: string,
     lastName: string,
     role: UserRole,
-    syncMode: SyncMode
 }
 
-export enum SyncMode{
-    NONE = "NONE",
-    ERP = "ERP",
-    HYBRID = "HYBRID"
+type ReconstitutePayload = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+    createdAt: Date;
+    updatedAt: Date | null;
 }
 
 export class User {
     private constructor(
         private readonly _id: string,
-        private readonly _externalId: string | null,
         private _firstName: string,
         private _lastName: string,
         private readonly _role: UserRole,
-        private _syncMode: SyncMode,
         private readonly _createdAt: Date,
         private _updatedAt: Date | null,
-        private _hash: string | null
     ){}
 
     static create(payload: CreatePayload){
@@ -45,40 +32,38 @@ export class User {
 
         return new User(
             crypto.randomUUID(), 
-            payload.externalId, 
             payload.firstName, 
             payload.lastName, 
             payload.role,
-            payload.syncMode,
             new Date(),
             null,
-            null
         )
     }
 
-    static convertFromDb(payload: ConversionPayload){
+    static reconstitute(payload: ReconstitutePayload){
         return new User(
-            payload.id, 
-            payload.externalId, 
-            payload.firstName, 
-            payload.lastName, 
+            payload.id,
+            payload.firstName,
+            payload.lastName,
             payload.role,
-            payload.syncMode,
             payload.createdAt,
-            payload.updatedAt,
-            null
+            payload.updatedAt
         )
+    }
+
+    getUORouting(){
+        if(this._role === UserRole.ALUNO){
+            return "ALUNOS"
+        }
+        if(this._role === UserRole.PROFESSOR){
+            return "PROFESSORES"
+        }
     }
 
     // Getters
     get id(): string {
         return this._id;
     }
-
-    get externalId(): string | null {
-        return this._externalId;
-    }
-
     get firstName(): string {
         return this._firstName;
     }
@@ -91,10 +76,6 @@ export class User {
         return this._role;
     }
 
-    get syncMode(): SyncMode{
-        return this._syncMode
-    }
-
     get createdAt(): Date{
         return this._createdAt
     }
@@ -103,7 +84,4 @@ export class User {
         return this._updatedAt
     }
 
-    get hash(): string | null{
-        return this._hash
-    }
 }
