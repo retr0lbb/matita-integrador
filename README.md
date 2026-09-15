@@ -105,7 +105,9 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - [x] create google service to classroom
 - [x] remove addUserToClassroom god function on drizzle classroom repository and substitute to
 repository of userToclassroom(save and get)
-- [ ] correct the flux of google things creation local -> google -> update local
+- [x] correct the flux of google things creation local -> google -> update local
+- [x] add google integration.
+- [x] verify if course has to need location and turns? IT DONT
 - [ ] create remove user to classroom.
 - [ ] add hash column to user model.
 - [ ] add hash integration with lex.
@@ -115,13 +117,11 @@ repository of userToclassroom(save and get)
 - [ ] create general useCases for sync engine.
 - [ ] create Cron job for sync fetch lex full 24/7 dayli connection.
 - [ ] !!!!!!! Se if the ENUMS for sync status are working as intended.
-- [ ] add google integration.
 - [ ] add custom domain (internet) to organization.
 - [ ] link student to institution (do it now).
 - [ ] link unit to user too.
 - [ ] think if user should be held main or account should be held main.
 - [ ] finish the findById google service.
-- [ ] verify if course has to need location and turns?
 - [ ] add to institution provider email, and account linkkage
 - [ ] add queues (BullMq or Redis)
 - [ ] see if i can make an google extractor. to add on sync engine
@@ -129,6 +129,7 @@ repository of userToclassroom(save and get)
 - [ ] create new ports for better querying
 - [ ] fix the new 2 methods on add user to classroom and get user to classroom
 - [ ] [IMPORTANT] add account linkage to tables
+- [ ] link unit and ogpath using google auto UO creation
 
 
 
