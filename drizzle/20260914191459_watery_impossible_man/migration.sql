@@ -4,3 +4,4 @@ DROP TYPE "account_status";--> statement-breakpoint
 CREATE TYPE "account_status" AS ENUM('PENDING', 'ACTIVE', 'FAILED');--> statement-breakpoint
 ALTER TABLE "accounts" ALTER COLUMN "status" SET DATA TYPE "account_status" USING "status"::"account_status";--> statement-breakpoint
 ALTER TABLE "accounts" ALTER COLUMN "status" SET DEFAULT 'PENDING'::"account_status";
+ALTER TYPE "classroom_status" ADD VALUE 'PENDING' BEFORE 'INACTIVE';--> statement-breakpoint

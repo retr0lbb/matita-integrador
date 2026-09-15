@@ -9,18 +9,9 @@ export const userSyncModeEnum = pgEnum('user_sync_mode', [
 
 export const usersTable = pgTable('users', {
   id: uuid('id').primaryKey(),
-
-  externalId: uuid('external_id').unique(),
-
   firstName: varchar('first_name').notNull(),
   lastName: varchar('last_name').notNull(),
-
   role: userRoleEnum('role').notNull(),
-
-  syncMode: userSyncModeEnum('sync_mode')
-    .notNull()
-    .default('NONE'),
-
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
