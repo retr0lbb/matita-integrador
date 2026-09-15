@@ -1,100 +1,171 @@
 import { randomUUID } from "crypto";
+
 import type { Email } from "../../shared/domains/value-objects/email.vo";
+
 import { AccountAlreadyLinkedError } from "./account-already-linked.error";
 import { AccountStatus } from "./value-objects/account-status.vo";
 
-type AccountConversionPayload = {
-  id: string;
-  googleExternalId: string | null;
-  userId: string;
-  googleEmailAddress: Email;
-  createdAt: Date;
-  status: AccountStatus;
-};
+export enum ExternalProvider {
+  GOOGLE = "GOOGLE",
+  LEX = "LEX",
+  MICROSOFT = "MICROSOFT",
+}
 
 type AccountCreatePayload = {
-  googleExternalId: string | null;
+  provider: ExternalProvider;
   userId: string;
-  googleEmailAddress: Email;
+  email: Email;
+  hash: string | null;
+};
+
+type AccountReconstitutePayload = {
+  id: string;
+  externalId: string | null;
+  provider: ExternalProvider;
+  userId: string;
+  email: Email | null;
+  hash: string | null;
   createdAt: Date;
   status: AccountStatus;
+  updatedAt: Date | null;
 };
 
 export class Account {
   private constructor(
     private readonly _id: string,
-    private _googleExternalId: string | null,
+    private _externalId: string | null,
+    private readonly _provider: ExternalProvider,
+    private _syncHash: string | null,
     private readonly _userId: string,
-    private _googleEmailAddress: Email,
-    private readonly _createdAt: Date,
+    private _email: Email | null,
     private _status: AccountStatus,
+    private readonly _createdAt: Date,
+    private _updatedAt: Date | null,
   ) {}
 
-  static create(payload: AccountCreatePayload) {
-    const id = randomUUID();
+  static create(payload: AccountCreatePayload): Account {
     return new Account(
-      id,
-      payload.googleExternalId,
+      randomUUID(),
+      null,
+      payload.provider,
+      payload.hash,
       payload.userId,
-      payload.googleEmailAddress,
-      payload.createdAt,
+      payload.email,
       AccountStatus.PENDING,
+      new Date(),
+      null,
     );
   }
 
-  static convertFromDb(payload: AccountConversionPayload): Account {
+  static reconstitute(payload: AccountReconstitutePayload): Account {
     return new Account(
       payload.id,
-      payload.googleExternalId,
+      payload.externalId,
+      payload.provider,
+      payload.hash,
       payload.userId,
-      payload.googleEmailAddress,
-      payload.createdAt,
+      payload.email,
       payload.status,
+      payload.createdAt,
+      payload.updatedAt,
     );
   }
 
-  linkToGoogleAccount(googleExternalId: string): void {
-    if (this._googleExternalId !== null) {
+  /**
+   * Vincula a Account com a representação externa
+   * criada pelo provedor.
+   */
+  link(externalId: string): void {
+    if (this._externalId !== null) {
       throw new AccountAlreadyLinkedError();
     }
-    this._googleExternalId = googleExternalId;
+
+    this._externalId = externalId;
+    this.touch();
   }
 
-  isLinkedToGoogle(): boolean {
-    console.log(this._googleExternalId)
-    return this._googleExternalId !== null && this._status !== AccountStatus.PENDING;
+  /**
+   * Marca a Account como ativa após o vínculo
+   * com o provedor externo.
+   */
+  activate(): void {
+    if (this._externalId === null) {
+      throw new Error(
+        "Não é possível ativar uma conta sem um externalId.",
+      );
+    }
+
+    this._status = AccountStatus.ACTIVE;
+    this.touch();
   }
 
-  public get id(): string {
+  /**
+   * Atualiza o hash utilizado para detectar
+   * alterações na representação externa.
+   */
+  updateSyncHash(hash: string): void {
+    this._syncHash = hash;
+    this.touch();
+  }
+
+  /**
+   * Atualiza o e-mail conhecido pelo provedor.
+   */
+  updateEmail(email: Email): void {
+    this._email = email;
+    this.touch();
+  }
+
+  markAsFailed(): void {
+    this._status = AccountStatus.FAILED;
+    this.touch();
+  }
+
+  isLinked(): boolean {
+    return this._externalId !== null;
+  }
+
+  isActive(): boolean {
+    return this._status === AccountStatus.ACTIVE;
+  }
+
+  private touch(): void {
+    this._updatedAt = new Date();
+  }
+
+  get id(): string {
     return this._id;
   }
 
-  public get googleExternalId(): string | null {
-    return this._googleExternalId;
+  get externalId(): string | null {
+    return this._externalId;
   }
 
-  public get userId(): string {
+  get provider(): ExternalProvider {
+    return this._provider;
+  }
+
+  get userId(): string {
     return this._userId;
   }
 
-  public get googleEmailAddress(): Email {
-    return this._googleEmailAddress;
+  get email(): Email | null {
+    return this._email;
   }
 
-  public get createdAt(): Date {
-    return this._createdAt;
+  get syncHash(): string | null {
+    return this._syncHash;
   }
 
-  public get status(): AccountStatus {
+  get status(): AccountStatus {
     return this._status;
   }
 
-  activate(googleId: string){
-    this._googleExternalId = googleId
-    this._status = AccountStatus.ACTIVE
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
-  markAsFailed(){
-    this._status = AccountStatus.FAILED
+  get updatedAt(): Date | null {
+    return this._updatedAt;
   }
 }

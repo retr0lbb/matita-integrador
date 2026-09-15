@@ -17,13 +17,17 @@ export class DeleteAccountUseCase{
             throw new Error("Account already not exists")
         }
 
-        if(account.googleExternalId){
-            const googleAccount = await this.googleAccount.findAccount(account.googleExternalId)
+        if(account.externalId){
+            const googleAccount = await this.googleAccount.findAccount(account.externalId)
             if(!googleAccount){
                 return
             }
 
-            await this.googleAccount.deleteAccount(account.googleEmailAddress.getValue(), "/Integrador-teste/Maplebear - Krypton")
+            if(!account.email){
+                throw new Error("Email not found")
+            }
+
+            await this.googleAccount.deleteAccount(account.email.getValue(), "/Integrador-teste/Maplebear - Krypton")
         }
 
         await this.accountsRepository.delete(account.id)

@@ -7,7 +7,7 @@ export type SyncRecord = {
   lexExternalId: string | null;
   firstName: string,
   lastName: string;
-  email: string;
+  email: string | undefined;
   turmaExternalId: string | null;
   role: 'ALUNO' | 'PROFESSOR';
   syncHash?: string;
@@ -15,12 +15,12 @@ export type SyncRecord = {
 
 export function toSyncRecord(user: User, classRoom: Classroom, account: Account ): SyncRecord{
     return {
-        email: account.googleEmailAddress.getValue(),
-        lexExternalId: user.externalId,
+        email: account.email?.getValue(),
+        lexExternalId: account.externalId,
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role as "ALUNO" | "PROFESSOR",
         turmaExternalId: classRoom.externalId,
-        syncHash: user.hash ?? undefined
+        syncHash: account.syncHash ?? undefined
     }
 }

@@ -1,7 +1,7 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../ports/classroom.repository";
 import { UNIT_REPOSITORY, type UnitRepository } from "../../../unit/domain/unity.repository";
-import { Classroom, ClassRoomShift, ClassroomStatus } from "../classroom.entity";
+import { Classroom, ClassroomStatus } from "../classroom.entity";
 import { randomUUID } from "crypto";
 import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../ports/google-classroom-client";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../../../accounts/domain/google-account-provider";
@@ -14,7 +14,6 @@ export type CreateClassRoomUseCasePayload = {
     title: string,
     location?: string,
     ownerAccountId: string,
-    shift?: ClassRoomShift,
     status?: ClassroomStatus,
 }
 
@@ -36,7 +35,6 @@ export class CreateClassRoomUseCase{
             throw new NotFoundException("Unity Not Found")
         }
 
-        const shift = payload.shift? ClassRoomShift[payload.shift]: ClassRoomShift.MORNING
         const status = payload.status? ClassroomStatus[payload.status]: ClassroomStatus.ACTIVE
 
         const account = await this.accountRepository.findById(payload.ownerAccountId)
@@ -55,11 +53,11 @@ export class CreateClassRoomUseCase{
             throw new ForbiddenException("User from role ALUNO cannot create a classroom")
         }
 
-        if(!account.googleExternalId){
+        if(!account.email){
             throw new Error("Cannot create a classroom without google account")
         }
 
-        const googleAccount = await this.googleAccountProvider.findAccount(account.googleExternalId)
+        const googleAccount = await this.googleAccountProvider.findAccount(account.email.getValue())
 
         if(googleAccount === null){
             throw new NotFoundException("Google Account not found")
@@ -74,10 +72,10 @@ export class CreateClassRoomUseCase{
             externalId: googleClassRoomId,
             id: randomUUID(),
             location: payload.location ?? null,
-            shift,
             status,
             title: payload.title,
-            unitId
+            unitId,
+            ownerId: account.id
         })
 
         await this.classRoomRepository.save(classroom)

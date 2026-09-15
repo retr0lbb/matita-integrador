@@ -5,9 +5,9 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Toji",
-  "lastName": "Fushiguro",
-  "role": "ALUNO",
+  "firstName": "Kento",
+  "lastName": "Nanami",
+  "role": "PROFESSOR",
   "syncMode": "NONE"
 }
 
@@ -16,7 +16,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "d3dd603b-0a34-4d0a-ad16-ba68fdb193d7"
+  "userId": "4620e2c5-e3b5-4b35-8239-4566e41d4191"
 }
 
 ###
@@ -36,19 +36,19 @@ POST {{baseUrl}}/unit
 Content-Type: application/json
 
 {
-  "institutionId": "2416fa92-5c7a-44b9-af69-d9bc2696e59f",
-  "alias": "Maplebear Capão Redondo",
+  "institutionId": "a8fceb2f-abfc-473a-b78f-46b263d86217",
+  "alias": "Maplebear Krypton",
   "address": null,
   "externalId": "1e91311d-f082-42ce-9a9d-c7a8cfbb2710"
 }
 
 ###
-POST {{baseUrl}}/unit/bd7ed514-58a3-4f5c-84c1-c832ad1c05c5/classroom
+POST {{baseUrl}}/unit/3b2f429c-5ebb-4d7d-9c6d-6f1657591b1b/classroom
 Content-Type: application/json
 
 {
-  "title": "7 ano B inglês",
-  "ownerAccountId": "4cbc6add-b0d5-4b92-9308-45cc8730037e"
+  "title": "JUJUTSU Tokio Grau especial",
+  "ownerAccountId": "39ea5b1b-6229-4c77-bc82-762f1b0fec3e"
 }
 
 ###

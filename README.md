@@ -130,6 +130,8 @@ repository of userToclassroom(save and get)
 - [ ] fix the new 2 methods on add user to classroom and get user to classroom
 - [ ] [IMPORTANT] add account linkage to tables
 - [ ] link unit and ogpath using google auto UO creation
+- [ ] refatorar classroom para usar o novo account e owner id
+- [ ] refatorar sync engine
 
 
 

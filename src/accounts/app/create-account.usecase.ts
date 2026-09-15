@@ -2,11 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Email } from "../../shared/domains/value-objects/email.vo";
 import { USER_REPOSITORY, type UserRepository } from "../../users/domain/user.repository";
 import { UserNotFoundError } from "../../users/domain/user-not-found.error";
-import { Account } from "../domain/account.entity";
+import { Account, ExternalProvider } from "../domain/account.entity";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
-import { AccountStatus } from "../domain/value-objects/account-status.vo";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../domain/google-account-provider";
-import { accountStatus } from "../../database/schemas/accountSchema";
 
 
 @Injectable()
@@ -37,10 +35,9 @@ export class CreateUserAccountUseCase{
 
         const accountEntity = Account.create({
             userId: user.id, 
-            googleEmailAddress: emailEntity,
-            googleExternalId: null,
-            status: AccountStatus.PENDING,
-            createdAt: new Date()
+            email: emailEntity,
+            provider: ExternalProvider.GOOGLE,
+            hash: null
         })
 
         await this.accountsRepository.save(accountEntity)
@@ -50,10 +47,11 @@ export class CreateUserAccountUseCase{
                 email: emailEntity.getValue(),
                 familyName: user.lastName,
                 givenName: user.firstName,
-                orgUnitPath: `/Integrador-teste/Maplebear - Krypton/ALUNOS`
+                orgUnitPath: `/Integrador-teste/Maplebear - Krypton/${user.getUORouting()}`
             })
 
-            accountEntity.activate(googleExternalId)
+            accountEntity.link(googleExternalId)
+            accountEntity.activate()
             await this.accountsRepository.updateGoogleIdForAccount(accountEntity)
 
         } catch (error) {

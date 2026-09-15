@@ -16,7 +16,7 @@ export const accountTable = pgTable("accounts", {
     .references(() => usersTable.id, { onDelete: "cascade" }),
   provider: providerEnum("provider").notNull(),
   externalId: varchar("external_id").unique(),
-    syncHash: varchar('sync_hash', { length: 255 }),
+  syncHash: varchar('sync_hash', { length: 255 }),
   email: varchar().unique(),
   status: accountStatus().notNull().default("PENDING"),
   createdAt: timestamp().notNull().defaultNow(),

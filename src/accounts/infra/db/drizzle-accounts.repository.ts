@@ -2,12 +2,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { AccountRepository } from "../../domain/account.repository";
-import { Account } from "../../domain/account.entity";
+import { Account, ExternalProvider } from "../../domain/account.entity";
 import { accountTable } from "../../../database/schemas/accountSchema";
 import { eq } from "drizzle-orm";
 import { Email } from "../../../shared/domains/value-objects/email.vo";
 import { AccountStatus } from "../../domain/value-objects/account-status.vo";
-import { ideahub } from "googleapis/build/src/apis/ideahub";
 
 
 @Injectable()
@@ -19,15 +18,16 @@ export class DrizzleAccountRepository implements AccountRepository{
     async save(account: Account): Promise<void> {
         await this.db.insert(accountTable).values({
             id: account.id,
-            email: account.googleEmailAddress.getValue(),
-            externalId: account.googleExternalId,
+            email: account.email? account.email.getValue(): null,
+            externalId: account.externalId,
             status: account.status,
             userId: account.userId,
+            provider: account.provider as any
         }).onConflictDoUpdate({
             target: accountTable.id,
             set: {
-                email: account.googleEmailAddress.getValue(),
-                externalId: account.googleExternalId,
+                email: account.email? account.email.getValue(): null,
+                externalId: account.externalId,
                 status: account.status,
                 userId: account.userId
             }
@@ -39,12 +39,12 @@ export class DrizzleAccountRepository implements AccountRepository{
             throw new Error("Account not active")
         }
 
-        if(!account.googleExternalId){
-            throw new Error("Cannot activate a idLess account")
+        if(!account.externalId){
+            throw new Error("Cannot activate a id Less account")
         }
         
         await this.db.update(accountTable).set({
-            externalId: account.googleExternalId,
+            externalId: account.externalId,
             status: "ACTIVE"
         }).where(eq(accountTable.id, account.id))
     }
@@ -61,14 +61,16 @@ export class DrizzleAccountRepository implements AccountRepository{
         if(!account){
             return null
         }
-
-        const accountObject = Account.convertFromDb({
+        const accountObject = Account.reconstitute({
             id: account.id,
             createdAt: account.createdAt, 
-            googleEmailAddress: Email.create(account.email),
+            email: account.email? Email.create(account.email): null,
             status: account.status as AccountStatus,
             userId: account.userId,
-            googleExternalId: account.externalId
+            externalId: account.externalId,
+            hash: account.syncHash,
+            provider: account.provider as ExternalProvider,
+            updatedAt: account.updatedAt
         })
 
         return accountObject
@@ -81,13 +83,16 @@ export class DrizzleAccountRepository implements AccountRepository{
             return null
         }
 
-        const accountObject = Account.convertFromDb({
+        const accountObject = Account.reconstitute({
             id: account.id,
             createdAt: account.createdAt, 
-            googleEmailAddress: Email.create(account.email),
+            email: account.email? Email.create(account.email): null,
             status: account.status as AccountStatus,
             userId: account.userId,
-            googleExternalId: account.externalId
+            externalId: account.externalId,
+            hash: account.syncHash,
+            provider: account.provider as ExternalProvider,
+            updatedAt: account.updatedAt
         })
 
         return accountObject
@@ -100,13 +105,16 @@ export class DrizzleAccountRepository implements AccountRepository{
             return null
         }
 
-        const accountObject = Account.convertFromDb({
+        const accountObject = Account.reconstitute({
             id: account.id,
             createdAt: account.createdAt, 
-            googleEmailAddress: Email.create(account.email),
+            email: account.email? Email.create(account.email): null,
             status: account.status as AccountStatus,
             userId: account.userId,
-            googleExternalId: account.externalId
+            externalId: account.externalId,
+            hash: account.syncHash,
+            provider: account.provider as ExternalProvider,
+            updatedAt: account.updatedAt
         })
 
         return accountObject
@@ -120,13 +128,16 @@ export class DrizzleAccountRepository implements AccountRepository{
         const accounts = await this.db.select().from(accountTable)
 
         const mappedAccounts = accounts.map((account) => {
-            return Account.convertFromDb({
+            return Account.reconstitute({
                 id: account.id,
                 createdAt: account.createdAt, 
-                googleEmailAddress: Email.create(account.email),
+                email: account.email? Email.create(account.email): null,
                 status: account.status as AccountStatus,
                 userId: account.userId,
-                googleExternalId: account.externalId
+                externalId: account.externalId,
+                hash: account.syncHash,
+                provider: account.provider as ExternalProvider,
+                updatedAt: account.updatedAt
             })
         })
 

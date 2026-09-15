@@ -1,21 +1,20 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { ClassRoomRepository } from "../domain/ports/classroom.repository";
-import { Classroom, ClassRoomShift, ClassroomStatus } from "../domain/classroom.entity";
+import { Classroom, ClassroomStatus } from "../domain/classroom.entity";
 import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { classRoomTable } from "../../database/schemas/classRoomSchema";
 import { and, eq } from "drizzle-orm";
-import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
 import { usersTable } from "../../database/schemas/userSchema";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
 import { ClassroomOwner, ClassroomOwnerQuery } from "../domain/ports/classroom-owner.query";
 import { accountTable } from "../../database/schemas/accountSchema";
 import { UserRole } from "../../users/domain/value-objects/user-role";
+import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
 
 
 @Injectable()
-export class DrizzleClassroomRepository implements ClassRoomRepository, 
-UserClassRepository, ClassroomOwnerQuery{
+export class DrizzleClassroomRepository implements ClassRoomRepository,UserClassRepository, ClassroomOwnerQuery{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
@@ -57,8 +56,8 @@ UserClassRepository, ClassroomOwnerQuery{
             externalId:  classroom.externalId,
             id:  classroom.id,
             location: classroom.location,
-            shift: classroom.shift,
-            status: classroom.status
+            status: classroom.status,
+            ownerId: classroom.ownerId
         })
     }
 
@@ -74,10 +73,10 @@ UserClassRepository, ClassroomOwnerQuery{
             externalId: classroom.externalId, 
             id: classroom.id, 
             location: classroom.location,
-            shift: classroom.shift as ClassRoomShift,
             status: classroom.status as ClassroomStatus,
             title: classroom.title,
-            unitId: classroom.unitId
+            unitId: classroom.unitId,
+            ownerId: classroom.ownerId
         })
     }
     
@@ -92,10 +91,10 @@ UserClassRepository, ClassroomOwnerQuery{
             externalId: classroom.externalId, 
             id: classroom.id, 
             location: classroom.location,
-            shift: classroom.shift as ClassRoomShift,
             status: classroom.status as ClassroomStatus,
             title: classroom.title,
-            unitId: classroom.unitId
+            unitId: classroom.unitId,
+            ownerId: classroom.ownerId
         }))
     }
 

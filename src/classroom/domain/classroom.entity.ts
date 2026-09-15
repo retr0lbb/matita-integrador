@@ -1,10 +1,4 @@
 
-export enum ClassRoomShift{
-    MORNING = "MORNING",
-    NIGHT = "NIGHT",
-    FULLTIME = "FULLTIME",
-    OTHER = "OTHER"
-}
 
 export enum ClassroomStatus {
     ACTIVE = "ACTIVE",
@@ -17,8 +11,8 @@ type CreateClassroomPayload = {
     unitId: string,
     title: string,
     location: string | null,
-    shift: ClassRoomShift,
     status: ClassroomStatus,
+    ownerId: string
 }
 
 export class Classroom{
@@ -28,9 +22,9 @@ export class Classroom{
         private readonly _unitId: string,
         private _title: string,
         private _location: string | null,
-        private _shift: ClassRoomShift,
         private _status: ClassroomStatus,
         private readonly _createdAt: Date,
+        private readonly _ownerId: string
     ){}
 
     static create(payload: CreateClassroomPayload): Classroom{
@@ -40,9 +34,9 @@ export class Classroom{
             payload.unitId, 
             payload.title, 
             payload.location, 
-            payload.shift, 
             payload.status, 
-            new Date()
+            new Date(),
+            payload.ownerId
         )
     }
 
@@ -67,15 +61,15 @@ export class Classroom{
         return this._location
     }
 
-    public get shift(): ClassRoomShift{
-        return this._shift
-    }
-
     public get status(): ClassroomStatus{
         return this._status
     }
 
     public get createdAt(): Date{
         return this._createdAt
+    }
+
+    public get ownerId(): string{
+        return this._ownerId
     }
 }
