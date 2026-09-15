@@ -11,4 +11,5 @@ export interface CreateGoogleAccountInput{
 export interface GoogleAccountProviderClient{
     createAccount(input: CreateGoogleAccountInput): Promise<string>
     findAccount(key: string): Promise<{id: string, email: string} | null>
+    deleteAccount(key: string, uoPath: string): Promise<void>
 }

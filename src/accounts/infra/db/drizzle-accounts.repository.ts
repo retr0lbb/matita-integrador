@@ -7,6 +7,7 @@ import { accountTable } from "../../../database/schemas/accountSchema";
 import { eq } from "drizzle-orm";
 import { Email } from "../../../shared/domains/value-objects/email.vo";
 import { AccountStatus } from "../../domain/value-objects/account-status.vo";
+import { ideahub } from "googleapis/build/src/apis/ideahub";
 
 
 @Injectable()
@@ -34,13 +35,23 @@ export class DrizzleAccountRepository implements AccountRepository{
     }
 
     async updateGoogleIdForAccount(account: Account): Promise<void> {
-        if(account.isLinkedToGoogle() === true){
-            throw new Error("Account is already connected")
+        if(account.status!== AccountStatus.ACTIVE){
+            throw new Error("Account not active")
         }
 
+        if(!account.googleExternalId){
+            throw new Error("Cannot activate a idLess account")
+        }
+        
         await this.db.update(accountTable).set({
             externalId: account.googleExternalId,
             status: "ACTIVE"
+        }).where(eq(accountTable.id, account.id))
+    }
+
+    async setFailedPending(account: Account): Promise<void> {
+        await this.db.update(accountTable).set({
+            status: "FAILED"
         }).where(eq(accountTable.id, account.id))
     }
 
@@ -99,6 +110,10 @@ export class DrizzleAccountRepository implements AccountRepository{
         })
 
         return accountObject
+    }
+
+    async delete(accountId: string): Promise<void> {
+        await this.db.delete(accountTable).where(eq(accountTable.id, accountId))
     }
 
     async listAccount(): Promise<Account[]> {

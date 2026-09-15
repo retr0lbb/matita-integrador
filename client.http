@@ -5,10 +5,10 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Yuta",
-  "lastName": "Okkotsu",
+  "firstName": "Toji",
+  "lastName": "Fushiguro",
   "role": "ALUNO",
-  "syncMode": "AUTO"
+  "syncMode": "NONE"
 }
 
 ###
@@ -16,8 +16,11 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "7134eb49-fe1b-4fee-8135-79d49a112eb9"
+  "userId": "d3dd603b-0a34-4d0a-ad16-ba68fdb193d7"
 }
+
+###
+DELETE {{baseUrl}}/accounts/e4393ebc-09aa-4c3b-a76b-d14f822ac86d
 
 ###
 POST {{baseUrl}}/institution

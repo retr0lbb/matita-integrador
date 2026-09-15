@@ -55,8 +55,17 @@ export class GoogleAccountAdapter implements GoogleAccountProviderClient {
         return response.data.id!
     }
 
-    async findAccountById(accountId: string): Promise<any> {
-        const account = this.directory.users.get()
-    }
+    async deleteAccount(key: string, uoPath: string): Promise<void> {
+        const deleteOrg = this.config.getOrThrow<string>("DELETION_ORG_PATH")
 
+        const deletionPath = `${uoPath}${deleteOrg}`
+
+        await this.directory.users.update({
+            userKey: key,
+            requestBody: {
+                suspended: true,
+                orgUnitPath: deletionPath
+            }
+        })
+    }
 }

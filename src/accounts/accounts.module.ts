@@ -8,11 +8,14 @@ import { USER_REPOSITORY } from "../users/domain/user.repository";
 import { DrizzleUserRepository } from "../users/infra/db/drizzle-user.repository";
 import { GOOGLE_ACCOUNT_PROVIDER } from "./domain/google-account-provider";
 import { GoogleAccountAdapter } from "./infra/google-account-provider.adapter";
+import { DeleteAccountUseCase } from "./app/delete-account.usecase";
 
 @Module({
     imports: [DatabaseModule],
     controllers: [AccountsController],
-    providers: [CreateUserAccountUseCase,
+    providers: [
+        CreateUserAccountUseCase,
+        DeleteAccountUseCase,
         {
             provide: ACCOUNT_REPOSITORY,
             useClass: DrizzleAccountRepository

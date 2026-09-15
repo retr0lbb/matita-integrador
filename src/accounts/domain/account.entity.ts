@@ -61,7 +61,8 @@ export class Account {
   }
 
   isLinkedToGoogle(): boolean {
-    return this._googleExternalId !== null;
+    console.log(this._googleExternalId)
+    return this._googleExternalId !== null && this._status !== AccountStatus.PENDING;
   }
 
   public get id(): string {

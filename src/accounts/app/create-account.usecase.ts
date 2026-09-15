@@ -54,13 +54,11 @@ export class CreateUserAccountUseCase{
             })
 
             accountEntity.activate(googleExternalId)
+            await this.accountsRepository.updateGoogleIdForAccount(accountEntity)
 
         } catch (error) {
             accountEntity.markAsFailed()
             console.log(error)
-        }
-        finally{
-            await this.accountsRepository.updateGoogleIdForAccount(accountEntity)
         }
     }
 }
