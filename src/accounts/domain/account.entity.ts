@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 
 import type { Email } from "../../shared/domains/value-objects/email.vo";
 
-import { AccountAlreadyLinkedError } from "./account-already-linked.error";
+import { AccountAlreadyLinkedError } from "./errors/account-already-linked.error";
 import { AccountStatus } from "./value-objects/account-status.vo";
 
 export enum ExternalProvider {
@@ -77,7 +77,7 @@ export class Account {
    */
   link(externalId: string): void {
     if (this._externalId !== null) {
-      throw new AccountAlreadyLinkedError();
+      throw new AccountAlreadyLinkedError("ACCOUNT_ALREADY_EXISTS");
     }
 
     this._externalId = externalId;

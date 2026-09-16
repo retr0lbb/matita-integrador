@@ -5,6 +5,7 @@ import { UserNotFoundError } from "../../users/domain/user-not-found.error";
 import { Account, ExternalProvider } from "../domain/account.entity";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../domain/google-account-provider";
+import { UserWithSameEmailAlreadyExistsInProvider } from "../domain/errors/user-with-email-error";
 
 
 @Injectable()
@@ -30,7 +31,7 @@ export class CreateUserAccountUseCase{
         const userWithEmailAlreadyExists = await this.googleAccount.findAccount(emailEntity.getValue())
 
         if(userWithEmailAlreadyExists !== null){
-            throw new Error("User with this email already exists")
+            throw new UserWithSameEmailAlreadyExistsInProvider()
         }
 
         const accountEntity = Account.create({

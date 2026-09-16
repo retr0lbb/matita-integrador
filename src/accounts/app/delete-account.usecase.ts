@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../domain/google-account-provider";
+import { EmailNotFond } from "../domain/errors/email-not-found";
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class DeleteAccountUseCase{
         const account = await this.accountsRepository.findById(accountId)
 
         if(!account){
-            throw new Error("Account already not exists")
+            return //previously i threw an error here
         }
 
         if(account.externalId){
@@ -24,7 +25,7 @@ export class DeleteAccountUseCase{
             }
 
             if(!account.email){
-                throw new Error("Email not found")
+                throw new EmailNotFond()
             }
 
             await this.googleAccount.deleteAccount(account.email.getValue(), "/Integrador-teste/Maplebear - Krypton")

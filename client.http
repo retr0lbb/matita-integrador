@@ -16,7 +16,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "4620e2c5-e3b5-4b35-8239-4566e41d4191"
+  "userId": "aa444639-8ad5-4af1-ba7e-63937663e402"
 }
 
 ###
