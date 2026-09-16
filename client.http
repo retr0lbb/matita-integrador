@@ -11,7 +11,8 @@ Content-Type: application/json
   "syncMode": "NONE"
 }
 
-###
+# ==== ACCOUNTS ====
+### create account
 POST {{baseUrl}}/accounts
 Content-Type: application/json
 
@@ -19,10 +20,16 @@ Content-Type: application/json
   "userId": "aa444639-8ad5-4af1-ba7e-63937663e402"
 }
 
-###
+### get unique account
+GET {{baseUrl}}/accounts/92782d6a-6d7f-44b1-abd4-1b7850800d6e
+
+### list all accounts
+GET {{baseUrl}}/accounts
+
+### delete account with google
 DELETE {{baseUrl}}/accounts/e4393ebc-09aa-4c3b-a76b-d14f822ac86d
 
-###
+### import from google
 POST {{baseUrl}}/accounts/import/google
 Content-Type: application/json
 

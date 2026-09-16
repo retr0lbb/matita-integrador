@@ -11,6 +11,7 @@ import { GoogleAccountAdapter } from "./infra/google-account-provider.adapter";
 import { DeleteAccountUseCase } from "./app/delete-account.usecase";
 import { ImportGoogleAccountsUseCase } from "./app/import-google-users.usecase";
 import { GetAccountUseCase } from "./app/get-account.usecase";
+import { ListAllAccountsUsecase } from "./app/list-accounts.usecase";
 
 @Module({
     imports: [DatabaseModule],
@@ -20,6 +21,7 @@ import { GetAccountUseCase } from "./app/get-account.usecase";
         DeleteAccountUseCase,
         ImportGoogleAccountsUseCase,
         GetAccountUseCase,
+        ListAllAccountsUsecase,
         {
             provide: ACCOUNT_REPOSITORY,
             useClass: DrizzleAccountRepository
