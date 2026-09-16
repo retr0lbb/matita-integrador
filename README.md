@@ -113,7 +113,12 @@ repository of userToclassroom(save and get)
 - [x] think if user should be held main or account should be held main.(user)
 - [x] add to database classroom owner id as user relation
 - [x] remove double userNotFoundError
-- [ ] fix import from google parcial import error account already exists
+- [x] fix import from google parcial import error account already exists (The error fixed itself)
+- [x] create test for user creation.
+- [x] create Cron job for sync google full 24/7 dayli connection.
+- [x] finish the findById google service.
+- [x] [IMPORTANT] add account linkage to tables
+- [ ] add volatile paths using path id from provider
 - [ ] test if database ownerId is working as intended
 - [ ] create identity resolution strategy
 - [ ] verify if owner id should be user or account
@@ -122,21 +127,17 @@ repository of userToclassroom(save and get)
 - [ ] create remove user to classroom.
 - [ ] create sync port and lex adapter.
 - [ ] create fake lex payload data.
-- [ ] create test for user creation.
-- [ ] create general useCases for sync engine.
 - [ ] create Cron job for sync fetch lex full 24/7 dayli connection.
 - [ ] add custom domain (internet) to organization.
 - [ ] link student to institution (do it now).
 - [ ] link unit to user too.
-- [ ] finish the findById google service.
 - [ ] add queues (BullMq or Redis).
 - [ ] see if i can make an google extractor. to add on sync engine
-- [ ] create new ports for better querying
-- [ ] fix the new 2 methods on add user to classroom and get user to classroom
-- [ ] [IMPORTANT] add account linkage to tables
-- [ ] link unit and ogpath using google auto UO creation
-- [ ] refatorar classroom para usar o novo account e owner id
-- [ ] refatorar sync engine
+- [ ] create new ports for better querying.
+- [ ] fix the new 2 methods on add user to classroom and get user to classroom.
+- [ ] link unit and ogpath using google auto UO creation.
+- [ ] refatorar classroom para usar o novo account e owner id.
+- [ ] refatorar sync engine.
 
 
 ## FUTURE FEATURES

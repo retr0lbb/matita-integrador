@@ -12,7 +12,7 @@ export class GoogleSyncScheduler{
  @Cron("*/10 * * * * *")
  async handleSync(){
    console.log("[CRON] Iniciando sincronização Google...");
-    //console.log(await this.importFromGoogle.execute("/Integrador-teste/Maplebear - Krypton"))
+    console.log(await this.importFromGoogle.execute("/Integrador-teste/Maplebear - Krypton"))
    console.log("[CRON] Sincronização Google finalizada.");
  }
 }
