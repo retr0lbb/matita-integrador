@@ -7,6 +7,7 @@ import { InstitutionModule } from "./institutions/instutution.module";
 import { UnitModule } from "./unit/unit.module";
 import { ClassRoomModule } from "./classroom/classroom.module";
 import { SyncModule } from './sync/sync.module';
+import {ScheduleModule} from "@nestjs/schedule"
 
 @Module({
   imports: 
@@ -17,6 +18,7 @@ import { SyncModule } from './sync/sync.module';
     InstitutionModule,
     UnitModule,
     ClassRoomModule,
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),

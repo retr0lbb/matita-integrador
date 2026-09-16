@@ -1,7 +1,7 @@
-import { Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ACCOUNT_REPOSITORY,type AccountRepository } from "../domain/account.repository";
 
-
+@Injectable()
 export class ListAllAccountsUsecase{
     constructor(
         @Inject(ACCOUNT_REPOSITORY) private readonly accountRepo: AccountRepository

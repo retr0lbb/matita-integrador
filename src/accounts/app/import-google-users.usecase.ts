@@ -1,4 +1,4 @@
-import { Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { GOOGLE_ACCOUNT_PROVIDER,type GoogleAccountProviderClient } from "../domain/google-account-provider";
 import { USER_REPOSITORY, type UserRepository } from "../../users/domain/user.repository";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
@@ -7,7 +7,7 @@ import { inferRoleFromOrgUnit } from "../../users/domain/infer-role";
 import { User } from "../../users/domain/user.entity";
 import { Email } from "../../shared/domains/value-objects/email.vo";
 
-
+@Injectable()
 export class ImportGoogleAccountsUseCase{
     constructor(
         @Inject(GOOGLE_ACCOUNT_PROVIDER) private readonly accountProvider: GoogleAccountProviderClient,

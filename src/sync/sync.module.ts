@@ -1,4 +1,11 @@
 import { Module } from '@nestjs/common';
+import { GoogleSyncScheduler } from './services/account.cron';
+import { AccountModule } from '../accounts/accounts.module';
 
-@Module({})
+@Module({
+    imports: [AccountModule],
+    providers:[
+        GoogleSyncScheduler
+    ]
+})
 export class SyncModule {}

@@ -15,13 +15,16 @@ import { ListAllAccountsUsecase } from "./app/list-accounts.usecase";
 
 @Module({
     imports: [DatabaseModule],
+
     controllers: [AccountsController],
+
     providers: [
         CreateUserAccountUseCase,
         DeleteAccountUseCase,
         ImportGoogleAccountsUseCase,
         GetAccountUseCase,
         ListAllAccountsUsecase,
+
         {
             provide: ACCOUNT_REPOSITORY,
             useClass: DrizzleAccountRepository
@@ -34,6 +37,13 @@ import { ListAllAccountsUsecase } from "./app/list-accounts.usecase";
             provide: GOOGLE_ACCOUNT_PROVIDER,
             useClass: GoogleAccountAdapter
         }
+    ],
+
+    exports: [
+        ImportGoogleAccountsUseCase,
+        ACCOUNT_REPOSITORY,
+        USER_REPOSITORY,
+        GOOGLE_ACCOUNT_PROVIDER
     ]
 })
-export class AccountModule{}
+export class AccountModule {}

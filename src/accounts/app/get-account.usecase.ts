@@ -1,9 +1,10 @@
-import { Inject } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../domain/account.repository";
 import { USER_REPOSITORY, type UserRepository } from "../../users/domain/user.repository";
 import { AccountNotFoundError } from "../domain/errors/account-not-found";
 import { UserNotFoundError } from "../../users/app/error/user-not-found";
 
+@Injectable()
 export class GetAccountUseCase{
     constructor(
         @Inject(ACCOUNT_REPOSITORY) private readonly accountRepo: AccountRepository,
