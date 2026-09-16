@@ -1,20 +1,31 @@
-import { Body, Controller, Delete, Param, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { CreateUserAccountUseCase } from "../app/create-account.usecase";
 import { DeleteAccountUseCase } from "../app/delete-account.usecase";
 import { ImportGoogleAccountsUseCase } from "../app/import-google-users.usecase";
+import { GetAccountUseCase } from "../app/get-account.usecase";
 
 @Controller("/accounts")
 export class AccountsController{
     constructor(
         private readonly createUserAccountUseCase: CreateUserAccountUseCase,
         private readonly deleteUserAccountUseCase: DeleteAccountUseCase,
-        private readonly importFromGoogle: ImportGoogleAccountsUseCase
+        private readonly importFromGoogle: ImportGoogleAccountsUseCase,
+        private readonly getAccount: GetAccountUseCase
     ){}
 
     @Post()
     async createUserAccount(@Body() payload: {userId: string} ){
         await this.createUserAccountUseCase.execute(payload.userId)
         return "ok"
+    }
+
+    @Get("/:id")
+    async getAccountRoute(@Param("id") accountId: string){
+        if(!accountId){
+            throw new BadRequestException("Id not provided")
+        }
+
+        return await this.getAccount.execute(accountId)
     }
 
     @Delete("/:id")
