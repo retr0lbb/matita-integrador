@@ -1,17 +1,29 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import { usersTable } from "../../../database/schemas/userSchema";
 import { User } from "../../domain/user.entity";
 import type { UserRepository } from "../../domain/user.repository";
 import type { UserRole } from "../../domain/value-objects/user-role";
+import { UserAlreadyExistisError } from "../../app/error/user-already-existis";
 
 @Injectable()
 export class DrizzleUserRepository implements UserRepository{
     constructor(@Inject(DRIZZLE) private readonly db: NodePgDatabase){}
 
     async save(user: User): Promise<void> {
+        const [existigUser] = await this.db.select()
+        .from(usersTable)
+        .where(and(
+            eq(usersTable.firstName, user.firstName), 
+            eq(usersTable.lastName, user.lastName))
+        )
+        
+        if(existigUser){
+            throw new UserAlreadyExistisError()
+        }
+
         await this.db.insert(usersTable).values({
             id: user.id,
             firstName: user.firstName,
