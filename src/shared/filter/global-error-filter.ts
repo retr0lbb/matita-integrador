@@ -17,6 +17,8 @@ export class GlobalExceptionFilter implements ExceptionFilter{
             return
         }
 
+        console.error(exception)
+
         response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             statusCode: 500,
             code: "INTERNAL_SERVER_ERROR",

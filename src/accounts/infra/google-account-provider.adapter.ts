@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateGoogleAccountInput, GoogleAccountProviderClient } from "../domain/google-account-provider";
+import { CreateGoogleAccountInput, GoogleAccountObject, GoogleAccountProviderClient } from "../domain/google-account-provider";
 import { ConfigService } from "@nestjs/config";
 import { google, admin_directory_v1} from 'googleapis';
 import { randomBytes } from "crypto";
@@ -16,11 +16,64 @@ export class GoogleAccountAdapter implements GoogleAccountProviderClient {
         const auth = new google.auth.JWT({
             email: creds.client_email,
             key: creds.private_key,
-            scopes: ['https://www.googleapis.com/auth/admin.directory.user'],
+            scopes: [
+                'https://www.googleapis.com/auth/admin.directory.user',
+                "https://www.googleapis.com/auth/admin.directory.orgunit.readonly"
+            ],
             subject: config.get<string>("GOOGLE_CLIENT_EMAIL"),
         });
 
         this.directory = google.admin({version: "directory_v1", auth})
+    }
+
+    async listOrgUnits() {
+        const response = await this.directory.orgunits.list({
+            customerId: "my_customer",
+            type: "all",
+        });
+
+        return response.data.organizationUnits ?? [];
+    }
+    
+    async listAllAccounts(orgUnitPath: string): Promise<Array<GoogleAccountObject>> {
+        const accounts: Array<GoogleAccountObject> = [];
+        let pageToken: string | undefined;
+
+        // const ous = await this.listOrgUnits()
+
+        // console.table(
+        //     ous.map(ou => ({
+        //         name: ou.name,
+        //         path: ou.orgUnitPath,
+        //         parent: ou.parentOrgUnitPath,
+        //         id: ou.orgUnitId
+        //     }))
+        // )
+
+        do {
+            const response = await this.directory.users.list({
+                customer: "my_customer",
+                maxResults: 100,
+                pageToken,
+                viewType: "admin_view",
+                query: `orgUnitPath='${orgUnitPath}'`,
+            });
+
+            for (const user of response.data.users ?? []) {
+                accounts.push({
+                    id: user.id!,
+                    email: user.primaryEmail!,
+                    externalIds: user.externalIds?.map(e => e.value!) ?? [],
+                    orgPath: user.orgUnitPath ?? undefined,
+                    familyName: user.name?.familyName!,
+                    givenName: user.name?.givenName!,
+                });
+            }
+
+            pageToken = response.data.nextPageToken ?? undefined;
+        } while (pageToken);
+
+        return accounts;
     }
 
     async findAccount(key: string): Promise<{id: string, email: string} | null>{ //key can be both id and email perfect for repeated email adresses

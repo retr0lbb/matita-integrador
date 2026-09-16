@@ -4,9 +4,12 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { AccountRepository } from "../../domain/account.repository";
 import { Account, ExternalProvider } from "../../domain/account.entity";
 import { accountTable } from "../../../database/schemas/accountSchema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Email } from "../../../shared/domains/value-objects/email.vo";
 import { AccountStatus } from "../../domain/value-objects/account-status.vo";
+import { usersTable } from "../../../database/schemas/userSchema";
+import { UserNotFoundError } from "../../../users/app/error/user-not-found";
+import { AccountNotFoundError } from "../../domain/errors/account-not-found";
 
 
 @Injectable()
@@ -14,6 +17,59 @@ export class DrizzleAccountRepository implements AccountRepository{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase,
     ){}
+
+    async findByEmailAndExternalProvider(email: string, provider: ExternalProvider): Promise<Account | null> {
+        const [account] = await this.db.select().from(accountTable)
+        .where(and(
+            eq(accountTable.email, email),
+            eq(accountTable.provider, provider as "LEX" | "GOOGLE")
+        ))
+
+        const constructed = Account.reconstitute({
+            id: account.id,
+            userId: account.userId,
+            createdAt: account.createdAt,
+            updatedAt: account.updatedAt,
+            email: account.email? Email.create(account.email): null,
+            externalId: account.externalId,
+            hash: account.syncHash,
+            provider: account.provider as ExternalProvider,
+            status: account.status as AccountStatus
+        })
+
+        return constructed
+    }
+    async findByUserAndProvider(userId: string, accountProvider: ExternalProvider): Promise<Account | null> {
+        const [user] = await this.db.select().from(usersTable).where(eq(usersTable.id, userId))
+
+        if(!user){
+            throw new UserNotFoundError()
+        }
+
+        const [account] = await this.db.select().from(accountTable)
+        .where(and(
+            eq(accountTable.userId, userId),
+            eq(accountTable.provider, accountProvider as "LEX" | "GOOGLE")
+        ))
+
+        if(!account){
+            throw new AccountNotFoundError()
+        }
+
+        const constructed = Account.reconstitute({
+            id: account.id,
+            userId: account.userId,
+            createdAt: account.createdAt,
+            updatedAt: account.updatedAt,
+            email: account.email? Email.create(account.email): null,
+            externalId: account.externalId,
+            hash: account.syncHash,
+            provider: account.provider as ExternalProvider,
+            status: account.status as AccountStatus
+        })
+
+        return constructed
+    }
 
     async save(account: Account): Promise<void> {
         await this.db.insert(accountTable).values({
@@ -98,8 +154,12 @@ export class DrizzleAccountRepository implements AccountRepository{
         return accountObject
     }
 
-    async findByProviderExternalId(id: string): Promise<Account | null> {
-        const [account] = await this.db.select().from(accountTable).where(eq(accountTable.externalId, id))
+    async findByProviderAndExternalId(provider: ExternalProvider, id: string): Promise<Account | null> {
+        const [account] = await this.db.select().from(accountTable)
+        .where(and(
+            eq(accountTable.externalId, id),
+            eq(accountTable.provider, provider as "LEX" | "GOOGLE")
+        ))
 
         if(!account){
             return null

@@ -112,6 +112,7 @@ repository of userToclassroom(save and get)
 - [x] create remove user account
 - [x] think if user should be held main or account should be held main.(user)
 - [x] add to database classroom owner id as user relation
+- [ ] remove double userNotFoundError
 - [ ] test if database ownerId is working as intended
 - [ ] create identity resolution strategy
 - [ ] verify if owner id should be user or account

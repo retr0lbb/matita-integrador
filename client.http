@@ -23,6 +23,14 @@ Content-Type: application/json
 DELETE {{baseUrl}}/accounts/e4393ebc-09aa-4c3b-a76b-d14f822ac86d
 
 ###
+POST {{baseUrl}}/accounts/import/google
+Content-Type: application/json
+
+{
+  "orgPath": "/Integrador-teste/Maplebear - Krypton"
+}
+
+###
 POST {{baseUrl}}/institution
 Content-Type: application/json
 
