@@ -63,7 +63,7 @@ POST {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
 Content-Type: application/json
 
 {
-  "title": "1° Grau Tokio",
+  "title": "Jujutsu 2° Kyoto",
   "ownerAccountId": "030ca590-d7f2-45ce-aa5c-8dee5745adc3"
 }
 

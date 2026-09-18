@@ -55,11 +55,10 @@ export class CreateClassRoomUseCase{
 
         const classroom = Classroom.create({
             externalId: null,
-            id: randomUUID(),
-            location: payload.location ?? null,
             status,
             title: payload.title,
             unitId,
+            googleExternalId: null,
             ownerId: account.id
         })
 

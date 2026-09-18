@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { ClassRoomRepository } from "../domain/ports/classroom.repository";
 import { Classroom, ClassroomStatus } from "../domain/classroom.entity";
 import { DRIZZLE } from "../../database/providers/drizzle.provider";
@@ -11,6 +11,8 @@ import { ClassroomOwner, ClassroomOwnerQuery } from "../domain/ports/classroom-o
 import { accountTable } from "../../database/schemas/accountSchema";
 import { UserRole } from "../../users/domain/value-objects/user-role";
 import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
+import { ClassNotActiveError } from "../domain/errors/class-not-active";
+import { UserAlreadyInClass } from "../domain/errors/user-already-in-class";
 
 
 @Injectable()
@@ -66,7 +68,7 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             unitId: classroom.unitId,
             externalId:  classroom.externalId,
             id:  classroom.id,
-            location: classroom.location,
+            googleClassroomId: classroom.googleExternalId,
             status: classroom.status,
             ownerId: classroom.ownerId
         }).onConflictDoUpdate({
@@ -75,7 +77,7 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
                 title: classroom.title,
                 unitId: classroom.unitId,
                 externalId: classroom.externalId,
-                location: classroom.location,
+                googleClassroomId: classroom.googleExternalId,
                 status: classroom.status,
                 ownerId: classroom.ownerId,
             }
@@ -90,12 +92,12 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             throw new Error("Classroom not found")
         }
 
-        return Classroom.create({
+        return Classroom.reconstitute({
             externalId: classroom.externalId, 
             id: classroom.id, 
-            location: classroom.location,
             status: classroom.status as ClassroomStatus,
             title: classroom.title,
+            googleExternalId: classroom.googleClassroomId,
             unitId: classroom.unitId,
             ownerId: classroom.ownerId
         })
@@ -108,13 +110,13 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
     async listClassrooms(): Promise<Classroom[]> {
         const classRooms = await this.db.select().from(classRoomTable)
 
-        return classRooms.map((classroom) => Classroom.create({
+        return classRooms.map((classroom) => Classroom.reconstitute({
             externalId: classroom.externalId, 
             id: classroom.id, 
-            location: classroom.location,
             status: classroom.status as ClassroomStatus,
             title: classroom.title,
             unitId: classroom.unitId,
+            googleExternalId: classroom.googleClassroomId,
             ownerId: classroom.ownerId
         }))
     }
@@ -133,7 +135,7 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
         }
 
         if(classRoom.status === "INACTIVE"){
-            throw new BadRequestException("ClassRoom Inactive please activate this classroom before it works")
+            throw new ClassNotActiveError()
         }
 
         const [relation] = await this.db.select()
@@ -144,7 +146,7 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             ))
 
         if(relation){
-            throw new BadRequestException("User Already in this classRoom")
+            throw new UserAlreadyInClass()
         }
 
         await this.db.insert(classRoomUsersTable).values({

@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto"
 
 
 export enum ClassroomStatus {
@@ -6,22 +7,30 @@ export enum ClassroomStatus {
 }
 
 type CreateClassroomPayload = {
-    id: string,
     externalId: string | null,
+    googleExternalId: string | null
     unitId: string,
     title: string,
-    location: string | null,
     status: ClassroomStatus,
     ownerId: string
 }
 
+type ReconstituteClassroomPayload = {
+    id: string,
+    externalId: string | null,
+    googleExternalId: string | null
+    unitId: string,
+    title: string,
+    status: ClassroomStatus,
+    ownerId: string
+}
 export class Classroom{
     private constructor(
         private readonly _id: string,
         private _externalId: string | null,
+        private _googleExternalId: string | null, //Smelly code but for now it will work as intended   
         private readonly _unitId: string,
         private _title: string,
-        private _location: string | null,
         private _status: ClassroomStatus,
         private readonly _createdAt: Date,
         private readonly _ownerId: string
@@ -29,11 +38,24 @@ export class Classroom{
 
     static create(payload: CreateClassroomPayload): Classroom{
         return new Classroom(
-            payload.id, 
+            randomUUID(),
             payload.externalId, 
+            payload.googleExternalId,
             payload.unitId, 
             payload.title, 
-            payload.location, 
+            payload.status, 
+            new Date(),
+            payload.ownerId
+        )
+    }
+
+    static reconstitute(payload: ReconstituteClassroomPayload): Classroom{
+        return new Classroom(
+            payload.id, 
+            payload.externalId, 
+            payload.googleExternalId,
+            payload.unitId, 
+            payload.title, 
             payload.status, 
             new Date(),
             payload.ownerId
@@ -57,10 +79,6 @@ export class Classroom{
         return this._title
     }
 
-    public get location(): string | null{
-        return this._location
-    }
-
     public get status(): ClassroomStatus{
         return this._status
     }
@@ -72,6 +90,9 @@ export class Classroom{
     public get ownerId(): string{
         return this._ownerId
     }
+    public get googleExternalId(): string | null{
+        return this._googleExternalId
+    }
 
     deactivate(){
         this._status = ClassroomStatus.INACTIVE
@@ -79,6 +100,6 @@ export class Classroom{
 
     activate(googleExtenalId: string){
         this._status = ClassroomStatus.ACTIVE
-        this._externalId = googleExtenalId
+        this._googleExternalId = googleExtenalId
     }
 }
