@@ -71,7 +71,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/classroom/f95417e5-4b9e-4960-b306-0873d1cb999a
 
 ### add student to classRoom
-POST {{baseUrl}}/classroom/1e1ea83b-6119-4462-b181-8c3c643865ff/add
+POST {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420/add
 Content-Type: application/json
 
 {

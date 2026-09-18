@@ -19,11 +19,22 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
     
-    getUserToClassroom(userId: string, classroomId: string): Promise<UserClassroomRelation | null> {
-        throw new Error("Method not implemented.");
+    async getUserToClassroom(userId: string, classroomId: string): Promise<UserClassroomRelation | null> {
+        const [exist] = await this.db.select().from(classRoomUsersTable)
+        .where(and(
+            eq(classRoomUsersTable.userId, userId),
+            eq(classRoomUsersTable.classRoomId, classroomId)            
+        ))
+        
+        return exist
     }
-    saveUserToClassroom(userId: string, classroomId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async saveUserToClassroom(userId: string, classroomId: string): Promise<void> {
+        await this.db.insert(classRoomUsersTable).values({
+            classRoomId: classroomId,
+            userId: userId,
+            status: "DONE" //mudar para modelo dps
+        })
     }
 
     async findByUserId(userId: string): Promise<ClassroomOwner | null> {

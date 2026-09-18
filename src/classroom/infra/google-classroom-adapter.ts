@@ -44,9 +44,7 @@ export class GoogleClassroomAdapter implements GoogleClassroomClient{
         const course = await this.classroom.courses.get({
            id: courseId
         })
-
-        console.log(course.data)
-        
+                
         return course.ok
     }
 

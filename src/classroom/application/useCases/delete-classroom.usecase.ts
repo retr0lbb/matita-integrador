@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { GOOGLE_CLASSROOM_CLIENT,type GoogleClassroomClient } from "../ports/google-classroom-client";
-import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../ports/classroom.repository";
+import { GOOGLE_CLASSROOM_CLIENT,type GoogleClassroomClient } from "../../domain/ports/google-classroom-client";
+import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../../domain/ports/classroom.repository";
 
 
 @Injectable()

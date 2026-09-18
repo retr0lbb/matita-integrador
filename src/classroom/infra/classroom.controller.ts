@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Delete, Param, Post } from "@nestjs/common";
-import { CreateClassRoomUseCase, type CreateClassRoomUseCasePayload } from "../domain/useCases/create-classroom.usecase";
-import { AddUserToClassRoom } from "../domain/useCases/add-user-to-classroom.usecase";
-import { DeleteClassRoomUsecase } from "../domain/useCases/delete-classroom.usecase";
+import { CreateClassRoomUseCase, type CreateClassRoomUseCasePayload } from "../application/useCases/create-classroom.usecase";
+import { AddUserToClassRoom } from "../application/useCases/add-user-to-classroom.usecase";
+import { DeleteClassRoomUsecase } from "../application/useCases/delete-classroom.usecase";
 
 @Controller()
 export class ClassroomController{
