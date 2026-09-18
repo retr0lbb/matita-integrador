@@ -1,9 +1,13 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
 import { CreateClassRoomUseCase, type CreateClassRoomUseCasePayload } from "../application/useCases/create-classroom.usecase";
 import { AddUserToClassRoom } from "../application/useCases/add-user-to-classroom.usecase";
 import { DeleteClassRoomUsecase } from "../application/useCases/delete-classroom.usecase";
 import { ListUnitClassesUseCase } from "../application/useCases/list-classes.usecase";
 import { GetClassInfoUseCase } from "../application/useCases/get-class-info-usecase";
+
+export type ListQueryParams = {
+    showInactive?: boolean
+}
 
 @Controller()
 export class ClassroomController{
@@ -39,7 +43,7 @@ export class ClassroomController{
     }
 
     @Get("/unit/:unitId/classroom")
-    async listUnitClassroom(@Param("unitId") unitId: string){
-        return await this.listUnitClass.execute(unitId)
+    async listUnitClassroom(@Param("unitId") unitId: string, @Query() query: ListQueryParams){
+        return await this.listUnitClass.execute(unitId, {showInactive: query.showInactive ?? false})
     }
 }

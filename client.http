@@ -67,11 +67,11 @@ Content-Type: application/json
   "ownerAccountId": "030ca590-d7f2-45ce-aa5c-8dee5745adc3"
 }
 
-### create classroom
+### List classrooms
 GET {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
 
 ### archive classroom
-DELETE {{baseUrl}}/classroom/f95417e5-4b9e-4960-b306-0873d1cb999a
+DELETE {{baseUrl}}/classroom/3b703afd-8e7a-45f2-882f-608c62ad4912
 
 ### add student to classRoom
 POST {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420/add

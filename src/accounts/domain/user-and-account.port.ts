@@ -5,18 +5,13 @@ import { ExternalProvider } from "./account.entity"
 
 export const USER_AND_ACCOUNT_PROVIDER = Symbol("USER_AND_ACCOUNT_PROVIDER") 
 
-export type UserAndAccountReturnType = {
-    userId: string
-    firstName: string
-    lastName: string
-    account: {
-        account_id: string
-        email: string | null
-        provider: ExternalProvider
-        role: UserRole
-    }
-}
+export type UserAccount = {
+    userId: string;
+    accountId: string;
+    email: string | null;
+    provider: ExternalProvider;
+};
 
 export interface UserAndAccountProvider{
-    findByUserIdsAndProvider(users: User[], provider: ExternalProvider): Promise<UserAndAccountReturnType[]>
+    findByUserIdsAndProvider(userIds: string[], provider: ExternalProvider): Promise<UserAccount[]>
 }

@@ -19,8 +19,13 @@ export class GetClassInfoUseCase{
             throw new ClassroomNotFoun()
         }
 
-        const classRoomStudents = await this.classRepo.getClassStudents(classroom)
-        const studentAccounts = await this.userAccountRepo.findByUserIdsAndProvider(classRoomStudents, ExternalProvider.GOOGLE)
+        const students = await this.classRepo.getClassStudents(classroom);
+        const accounts = await this.userAccountRepo.findByUserIdsAndProvider(
+            students.map((student) => student.id),
+            ExternalProvider.GOOGLE,
+        );
+
+        const accountByUserId = new Map(accounts.map((account) => [account.userId, account]));
 
         return{
             id: classroom.id,
@@ -30,7 +35,13 @@ export class GetClassInfoUseCase{
             unitId: classroom.unitId,
             status: classroom.status,      
             ownerId: classroom.ownerId,
-            users: studentAccounts,
+            users: students.map((student) => ({
+                userId: student.id,
+                firstName: student.firstName,
+                lastName: student.lastName,
+                role: student.role,
+                account: accountByUserId.get(student.id) ?? null,
+            })),
             createdAT: classroom.createdAt
         }
     }

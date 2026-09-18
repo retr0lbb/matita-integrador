@@ -36,7 +36,7 @@ export class AddUserToClassRoom{
 
         const classRoom = await this.classRoomRepository.findById(classRoomId)
 
-        if(!classRoom || !classRoom.externalId){
+        if(!classRoom || !classRoom.googleExternalId){
             throw new Error("Classroom doesnot exists or has not been created yet")
         }
 
@@ -50,13 +50,13 @@ export class AddUserToClassRoom{
             throw new Error("Only students must be able to be added into a classroom")
         }
 
-        const classRoomClassExistis = await this.googleClassroom.findClassroom(classRoom.externalId)
+        const classRoomClassExistis = await this.googleClassroom.findClassroom(classRoom.googleExternalId)
 
         if(!classRoomClassExistis){
             throw new Error("Classroom doesnot exists")
         }
 
-        await this.googleClassroom.addStudent(classRoom.externalId, userAccountExists.email)
+        await this.googleClassroom.addStudent(classRoom.googleExternalId, userAccountExists.email)
 
         await this.userToClassroom.saveUserToClassroom(data.userId, classRoom.id)
     }

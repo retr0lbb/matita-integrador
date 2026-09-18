@@ -17,8 +17,8 @@ export class DeleteClassRoomUsecase{
             return
         }
 
-        if(classroom.externalId){
-            await this.googleClient.archiveClassroom(classroom.externalId)
+        if(classroom.googleExternalId){
+            await this.googleClient.archiveClassroom(classroom.googleExternalId)
         }
 
         classroom.deactivate()
