@@ -19,6 +19,7 @@ import { ACCOUNT_REPOSITORY } from "../accounts/domain/account.repository";
 import { DrizzleAccountRepository } from "../accounts/infra/db/drizzle-accounts.repository";
 import { CLASSROOM_OWNER_QUERY } from "./domain/ports/classroom-owner.query";
 import { DeleteClassRoomUsecase } from "./application/useCases/delete-classroom.usecase";
+import { ListUnitClassesUseCase } from "./application/useCases/list-classes.usecase";
 
 @Module({
     imports: [DatabaseModule, UnitModule],
@@ -26,6 +27,7 @@ import { DeleteClassRoomUsecase } from "./application/useCases/delete-classroom.
         CreateClassRoomUseCase,
         AddUserToClassRoom,
         DeleteClassRoomUsecase,
+        ListUnitClassesUseCase,
         {
             provide: CLASSROOM_REPOSITORY,
             useClass: DrizzleClassroomRepository,

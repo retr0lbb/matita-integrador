@@ -13,6 +13,8 @@ import { UserRole } from "../../users/domain/value-objects/user-role";
 import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
 import { ClassNotActiveError } from "../domain/errors/class-not-active";
 import { UserAlreadyInClass } from "../domain/errors/user-already-in-class";
+import { unitTable } from "../../database/schemas/unitSchema";
+import { UnitNotFound } from "../../unit/domain/errors/unit-not-found";
 
 
 @Injectable()
@@ -109,6 +111,26 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
     
     async listClassrooms(): Promise<Classroom[]> {
         const classRooms = await this.db.select().from(classRoomTable)
+
+        return classRooms.map((classroom) => Classroom.reconstitute({
+            externalId: classroom.externalId, 
+            id: classroom.id, 
+            status: classroom.status as ClassroomStatus,
+            title: classroom.title,
+            unitId: classroom.unitId,
+            googleExternalId: classroom.googleClassroomId,
+            ownerId: classroom.ownerId
+        }))
+    }
+
+    async listUnitClassrooms(unitId: string): Promise<Classroom[]> {
+        const unit = await this.db.select().from(unitTable).where(eq(unitTable.id, unitId))
+
+        if(!unit){
+            throw new UnitNotFound()
+        }
+
+        const classRooms = await this.db.select().from(classRoomTable).where(eq(classRoomTable.unitId, unitId))
 
         return classRooms.map((classroom) => Classroom.reconstitute({
             externalId: classroom.externalId, 

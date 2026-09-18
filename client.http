@@ -58,7 +58,7 @@ Content-Type: application/json
 }
 
 # ===== CLASSROOMS ======
-###
+### create classroom
 POST {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
 Content-Type: application/json
 
@@ -66,6 +66,10 @@ Content-Type: application/json
   "title": "Jujutsu 2° Kyoto",
   "ownerAccountId": "030ca590-d7f2-45ce-aa5c-8dee5745adc3"
 }
+
+### create classroom
+GET {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
+
 
 ### archive classroom
 DELETE {{baseUrl}}/classroom/f95417e5-4b9e-4960-b306-0873d1cb999a

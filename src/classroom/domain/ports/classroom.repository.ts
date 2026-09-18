@@ -7,4 +7,5 @@ export interface ClassRoomRepository{
     findById(id: string): Promise<Classroom | null>
     findByProviderExternalId(id: string): Promise<Classroom | null>
     listClassrooms(): Promise<Classroom[]>
+    listUnitClassrooms(unitId: string): Promise<Classroom[]>
 }

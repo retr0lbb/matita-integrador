@@ -23,9 +23,9 @@
 
 ## 🔓 Pode fazer agora — não depende da chave da Lex
 
-- [ ] **Decidir: `ownerId` do Classroom aponta pra `User` ou `Account`, e refatorar** *(junta "verify if owner id should be user or account", "test if database ownerId is working as intended" e "refatorar classroom para usar o novo account e owner id")*
+- [x] **Decidir: `ownerId` do Classroom aponta pra `User` ou `Account`, e refatorar** *(junta "verify if owner id should be user or account", "test if database ownerId is working as intended" e "refatorar classroom para usar o novo account e owner id")*
 - [ ] **Guardar `orgUnitId` (estável) em vez de só o path de texto da UO** *(era o "add volatile paths using path id from provider")*
-- [ ] **Criar `removeUserFromClassroom` e limpar os métodos de add/get** *(junta "create remove user to classroom" com "fix the new 2 methods on add user to classroom and get user to classroom")*
+- [x, ] **Criar `removeUserFromClassroom` e limpar os métodos de add/get** *(junta "create remove user to classroom" com "fix the new 2 methods on add user to classroom and get user to classroom")*
 - [ ] **Identity resolution strategy** — regra pra quando uma conta Google órfã pode ou não ser casada com um `User` já existente
 - [ ] **Criar payload fake da Lex**, no formato da doc do Sync Full, pra desenvolver e testar o diff engine sem esperar a chave
 - [ ] **Criar a porta genérica de sync + o extrator do Google como fonte** *(junta "create sync port and lex adapter" — só a parte da porta/interface —, "see if i can make an google extractor" e parte do "refatorar sync engine")*

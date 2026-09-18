@@ -1,14 +1,16 @@
-import { BadRequestException, Body, Controller, Delete, Param, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { CreateClassRoomUseCase, type CreateClassRoomUseCasePayload } from "../application/useCases/create-classroom.usecase";
 import { AddUserToClassRoom } from "../application/useCases/add-user-to-classroom.usecase";
 import { DeleteClassRoomUsecase } from "../application/useCases/delete-classroom.usecase";
+import { ListUnitClassesUseCase } from "../application/useCases/list-classes.usecase";
 
 @Controller()
 export class ClassroomController{
     constructor(
         private readonly createUseCase: CreateClassRoomUseCase,
         private readonly addUserToClass: AddUserToClassRoom,
-        private readonly archiveClass: DeleteClassRoomUsecase
+        private readonly archiveClass: DeleteClassRoomUsecase,
+        private readonly listUnitClass: ListUnitClassesUseCase
     ){}
 
     @Post("/unit/:unitId/classroom")
@@ -22,12 +24,15 @@ export class ClassroomController{
     @Post("/classroom/:id/add")
     async addUserToClassRoom(@Param("id") classRoomId: string, @Body() body: {userId: string}){
         await this.addUserToClass.execute(body.userId, classRoomId)
-
-        return "user added correctly"
     }
 
     @Delete("/classroom/:id")
     async archiveClassroom(@Param("id") classroomId: string){
         await this.archiveClass.execute(classroomId)
+    }
+
+    @Get("/unit/:unitId/classroom")
+    async listUnitClassroom(@Param("unitId") unitId: string){
+        return await this.listUnitClass.execute(unitId)
     }
 }
