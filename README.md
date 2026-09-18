@@ -118,6 +118,7 @@ repository of userToclassroom(save and get)
 - [x] create Cron job for sync google full 24/7 dayli connection.
 - [x] finish the findById google service.
 - [x] [IMPORTANT] add account linkage to tables
+- [x] refatorar classroom para usar o novo account e owner id.
 - [ ] add volatile paths using path id from provider
 - [ ] test if database ownerId is working as intended
 - [ ] create identity resolution strategy
@@ -136,8 +137,7 @@ repository of userToclassroom(save and get)
 - [ ] create new ports for better querying.
 - [ ] fix the new 2 methods on add user to classroom and get user to classroom.
 - [ ] link unit and ogpath using google auto UO creation.
-- [ ] refatorar classroom para usar o novo account e owner id.
-- [ ] refatorar sync engine.
+- [ ] see if unique name is valid for google classroom multiclassroom
 
 
 ## FUTURE FEATURES

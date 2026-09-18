@@ -9,10 +9,13 @@ export class GoogleSyncScheduler{
  ){}
 
 
- @Cron("*/10 * * * * *")
+ @Cron('0 0 * * *', { //roda as 9 horas
+  name: "PULL From Google",
+  timeZone: 'America/Sao_Paulo',
+ })
  async handleSync(){
    console.log("[CRON] Iniciando sincronização Google...");
-    console.log(await this.importFromGoogle.execute("/Integrador-teste/Maplebear - Krypton"))
+    // console.log(await this.importFromGoogle.execute("/Integrador-teste/Maplebear - Krypton"))
    console.log("[CRON] Sincronização Google finalizada.");
  }
 }

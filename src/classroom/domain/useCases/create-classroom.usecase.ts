@@ -35,7 +35,7 @@ export class CreateClassRoomUseCase{
             throw new NotFoundException("Unity Not Found")
         }
 
-        const status = payload.status? ClassroomStatus[payload.status]: ClassroomStatus.ACTIVE
+        const status = ClassroomStatus.INACTIVE
 
         const account = await this.accountRepository.findById(payload.ownerAccountId)
 
@@ -53,11 +53,24 @@ export class CreateClassRoomUseCase{
             throw new ForbiddenException("User from role ALUNO cannot create a classroom")
         }
 
+        const classroom = Classroom.create({
+            externalId: null,
+            id: randomUUID(),
+            location: payload.location ?? null,
+            status,
+            title: payload.title,
+            unitId,
+            ownerId: account.id
+        })
+
+        await this.classRoomRepository.save(classroom)
+
         if(!account.email){
             throw new Error("Cannot create a classroom without google account")
         }
 
         const googleAccount = await this.googleAccountProvider.findAccount(account.email.getValue())
+
 
         if(googleAccount === null){
             throw new NotFoundException("Google Account not found")
@@ -68,16 +81,9 @@ export class CreateClassRoomUseCase{
             ownerEmail: googleAccount.email
         })
 
-        const classroom = Classroom.create({
-            externalId: googleClassRoomId,
-            id: randomUUID(),
-            location: payload.location ?? null,
-            status,
-            title: payload.title,
-            unitId,
-            ownerId: account.id
-        })
+        classroom.activate(googleClassRoomId)
 
         await this.classRoomRepository.save(classroom)
+
     }
 }

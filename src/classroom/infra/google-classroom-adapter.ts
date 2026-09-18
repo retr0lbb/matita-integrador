@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { GoogleClassroomClient } from "../domain/ports/google-classroom-client";
 import { ConfigService } from "@nestjs/config";
 import { classroom_v1, google } from "googleapis";
+import { Classroom } from "../domain/classroom.entity";
 
 @Injectable()
 export class GoogleClassroomAdapter implements GoogleClassroomClient{
@@ -23,6 +24,20 @@ export class GoogleClassroomAdapter implements GoogleClassroomClient{
 
 
         this.classroom = google.classroom({version: "v1", auth})
+    }
+
+    async archiveClassroom(classromId: string): Promise<void> {
+        try {
+            await this.classroom.courses.patch({
+                id: classromId,
+                updateMask: "courseState",
+                requestBody: {
+                    courseState: "ARCHIVED"
+                }
+            })   
+        } catch (error) {
+            throw error
+        }
     }
 
     async findClassroom(courseId: string): Promise<boolean> {

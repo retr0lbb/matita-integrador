@@ -58,6 +58,16 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             location: classroom.location,
             status: classroom.status,
             ownerId: classroom.ownerId
+        }).onConflictDoUpdate({
+            target: classRoomTable.id,
+            set: {
+                title: classroom.title,
+                unitId: classroom.unitId,
+                externalId: classroom.externalId,
+                location: classroom.location,
+                status: classroom.status,
+                ownerId: classroom.ownerId,
+            }
         })
     }
 

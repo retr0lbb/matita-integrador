@@ -18,7 +18,7 @@ type CreateClassroomPayload = {
 export class Classroom{
     private constructor(
         private readonly _id: string,
-        private readonly _externalId: string | null,
+        private _externalId: string | null,
         private readonly _unitId: string,
         private _title: string,
         private _location: string | null,
@@ -71,5 +71,14 @@ export class Classroom{
 
     public get ownerId(): string{
         return this._ownerId
+    }
+
+    deactivate(){
+        this._status = ClassroomStatus.INACTIVE
+    }
+
+    activate(googleExtenalId: string){
+        this._status = ClassroomStatus.ACTIVE
+        this._externalId = googleExtenalId
     }
 }
