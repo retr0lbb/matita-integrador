@@ -3,6 +3,7 @@ import { CreateClassRoomUseCase, type CreateClassRoomUseCasePayload } from "../a
 import { AddUserToClassRoom } from "../application/useCases/add-user-to-classroom.usecase";
 import { DeleteClassRoomUsecase } from "../application/useCases/delete-classroom.usecase";
 import { ListUnitClassesUseCase } from "../application/useCases/list-classes.usecase";
+import { GetClassInfoUseCase } from "../application/useCases/get-class-info-usecase";
 
 @Controller()
 export class ClassroomController{
@@ -10,7 +11,8 @@ export class ClassroomController{
         private readonly createUseCase: CreateClassRoomUseCase,
         private readonly addUserToClass: AddUserToClassRoom,
         private readonly archiveClass: DeleteClassRoomUsecase,
-        private readonly listUnitClass: ListUnitClassesUseCase
+        private readonly listUnitClass: ListUnitClassesUseCase,
+        private readonly getClass: GetClassInfoUseCase
     ){}
 
     @Post("/unit/:unitId/classroom")
@@ -29,6 +31,11 @@ export class ClassroomController{
     @Delete("/classroom/:id")
     async archiveClassroom(@Param("id") classroomId: string){
         await this.archiveClass.execute(classroomId)
+    }
+
+    @Get("/classroom/:id")
+    async getClassRoute(@Param("id") classroomId: string){
+        return await this.getClass.execute(classroomId)
     }
 
     @Get("/unit/:unitId/classroom")

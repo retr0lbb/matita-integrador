@@ -8,13 +8,14 @@ import { and, eq } from "drizzle-orm";
 import { usersTable } from "../../database/schemas/userSchema";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
 import { ClassroomOwner, ClassroomOwnerQuery } from "../domain/ports/classroom-owner.query";
-import { accountTable } from "../../database/schemas/accountSchema";
+import { accountStatus, accountTable } from "../../database/schemas/accountSchema";
 import { UserRole } from "../../users/domain/value-objects/user-role";
 import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
 import { ClassNotActiveError } from "../domain/errors/class-not-active";
 import { UserAlreadyInClass } from "../domain/errors/user-already-in-class";
 import { unitTable } from "../../database/schemas/unitSchema";
 import { UnitNotFound } from "../../unit/domain/errors/unit-not-found";
+import { User } from "../../users/domain/user.entity";
 
 
 @Injectable()
@@ -103,6 +104,25 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             unitId: classroom.unitId,
             ownerId: classroom.ownerId
         })
+    }
+
+    async getClassStudents(classRoom: Classroom): Promise<User[]> {
+
+        const classStudents = await this.db.select({user: usersTable})
+        .from(classRoomUsersTable)
+        .innerJoin(usersTable, eq(usersTable.id, classRoomUsersTable.userId))
+        .where(
+            eq(classRoomUsersTable.classRoomId, classRoom.id)
+        )
+
+        return classStudents.map(student => User.reconstitute({
+            createdAt: student.user.createdAt,
+            firstName: student.user.firstName,
+            id: student.user.id,
+            lastName: student.user.lastName,
+            role: student.user.role as UserRole,
+            updatedAt: student.user.updatedAt
+        }))
     }
     
     findByProviderExternalId(id: string): Promise<Classroom | null> {

@@ -4,19 +4,57 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { AccountRepository } from "../../domain/account.repository";
 import { Account, ExternalProvider } from "../../domain/account.entity";
 import { accountTable } from "../../../database/schemas/accountSchema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { Email } from "../../../shared/domains/value-objects/email.vo";
 import { AccountStatus } from "../../domain/value-objects/account-status.vo";
 import { usersTable } from "../../../database/schemas/userSchema";
 import { UserNotFoundError } from "../../../users/app/error/user-not-found";
 import { AccountNotFoundError } from "../../domain/errors/account-not-found";
+import { UserAndAccountProvider, UserAndAccountReturnType } from "../../domain/user-and-account.port";
+import { User } from "../../../users/domain/user.entity";
+import { UserRole } from "../../../users/domain/value-objects/user-role";
 
 
 @Injectable()
-export class DrizzleAccountRepository implements AccountRepository{
+export class DrizzleAccountRepository implements AccountRepository, UserAndAccountProvider{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase,
     ){}
+    
+    async findByUserIdsAndProvider(users: User[], provider: ExternalProvider): Promise<UserAndAccountReturnType[]> {
+        if (users.length === 0) return [];
+        const userIds = users.map((user) => user.id);
+        
+        const rows = await this.db.select({
+            userId: usersTable.id,
+            firstName: usersTable.firstName,
+            lastName: usersTable.lastName,
+            accountId: accountTable.id,
+            email: accountTable.email,
+            provider: accountTable.provider,
+            role: usersTable.role,
+        }).from(accountTable)
+        .innerJoin(usersTable, eq(usersTable.id, accountTable.userId))
+        .where(
+            and(
+                inArray(accountTable.userId, userIds),
+                eq(accountTable.provider, provider as "LEX" | "GOOGLE"),
+            ),
+        )
+
+        return rows.map((row) => ({
+            userId: row.userId,
+            firstName: row.firstName,
+            lastName: row.lastName,
+            account: {
+                account_id: row.accountId,
+                email: row.email,
+                provider: row.provider as ExternalProvider,
+                role: row.role as UserRole,
+            },
+        }));
+
+    }
 
     async findByEmailAndExternalProvider(email: string, provider: ExternalProvider): Promise<Account | null> {
         const [account] = await this.db.select().from(accountTable)

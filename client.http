@@ -70,7 +70,6 @@ Content-Type: application/json
 ### create classroom
 GET {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
 
-
 ### archive classroom
 DELETE {{baseUrl}}/classroom/f95417e5-4b9e-4960-b306-0873d1cb999a
 
@@ -81,3 +80,6 @@ Content-Type: application/json
 {
   "userId": "64df60ff-4a5e-4bf6-a9b8-3bcbbe2d2b97"  
 }
+
+### Get classroom
+GET {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420
