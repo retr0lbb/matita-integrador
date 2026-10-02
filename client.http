@@ -5,8 +5,8 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Kento",
-  "lastName": "Nanami",
+  "firstName": "Henrique",
+  "lastName": "Barbosa",
   "role": "PROFESSOR",
   "syncMode": "NONE"
 }
@@ -17,7 +17,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "aa444639-8ad5-4af1-ba7e-63937663e402"
+  "userId": "d0fa19ac-df91-426c-b52c-f42db7cf124d"
 }
 
 ### get unique account
@@ -27,7 +27,7 @@ GET {{baseUrl}}/accounts/92782d6a-6d7f-44b1-abd4-1b7850800d6e
 GET {{baseUrl}}/accounts
 
 ### delete account with google
-DELETE {{baseUrl}}/accounts/e4393ebc-09aa-4c3b-a76b-d14f822ac86d
+DELETE {{baseUrl}}/accounts/da249e76-3f93-4b55-bb23-9b07df894e78
 
 ### import from google
 POST {{baseUrl}}/accounts/import/google
@@ -63,7 +63,7 @@ Content-Type: application/json
 
 {
   "title": "JUJUTSU Tokio Grau especial",
-  "ownerAccountId": "39ea5b1b-6229-4c77-bc82-762f1b0fec3e"
+  "ownerAccountId": "4b6a3d2b-d4d0-417b-85a1-01cd5f31fdbc"
 }
 
 ###
