@@ -1,0 +1,2 @@
+ALTER TABLE "classrooms" DROP CONSTRAINT "classrooms_owner_id_accounts_id_fkey", ADD CONSTRAINT "classrooms_owner_id_accounts_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "accounts"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "classrooms" DROP CONSTRAINT "classrooms_unit_id_units_id_fkey", ADD CONSTRAINT "classrooms_unit_id_units_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE CASCADE;

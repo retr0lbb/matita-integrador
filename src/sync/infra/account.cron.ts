@@ -8,7 +8,6 @@ export class GoogleSyncScheduler{
     private readonly importFromGoogle: ImportGoogleAccountsUseCase
  ){}
 
-
  @Cron('0 0 * * *', { //roda as 9 horas
   name: "PULL From Google",
   timeZone: 'America/Sao_Paulo',
