@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { USER_CLASSROOM_REPOSITORY, type UserClassRepository } from "../ports/user-classroom.repository";
-import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../ports/google-classroom-client";
-import { CLASSROOM_OWNER_QUERY, type ClassroomOwnerQuery } from "../ports/classroom-owner.query";
+import { USER_CLASSROOM_REPOSITORY, type UserClassRepository } from "../../domain/ports/user-classroom.repository";
+import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../../domain/ports/google-classroom-client";
+import { CLASSROOM_OWNER_QUERY, type ClassroomOwnerQuery } from "../../domain/ports/classroom-owner.query";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../../../accounts/domain/google-account-provider";
-import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../ports/classroom.repository";
+import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../../domain/ports/classroom.repository";
 import { UserRole } from "../../../users/domain/value-objects/user-role";
 
 
@@ -36,7 +36,7 @@ export class AddUserToClassRoom{
 
         const classRoom = await this.classRoomRepository.findById(classRoomId)
 
-        if(!classRoom || !classRoom.externalId){
+        if(!classRoom || !classRoom.googleExternalId){
             throw new Error("Classroom doesnot exists or has not been created yet")
         }
 
@@ -50,13 +50,13 @@ export class AddUserToClassRoom{
             throw new Error("Only students must be able to be added into a classroom")
         }
 
-        const classRoomClassExistis = await this.googleClassroom.findClassroom(classRoom.externalId)
+        const classRoomClassExistis = await this.googleClassroom.findClassroom(classRoom.googleExternalId)
 
         if(!classRoomClassExistis){
             throw new Error("Classroom doesnot exists")
         }
 
-        await this.googleClassroom.addStudent(classRoom.externalId, userAccountExists.email)
+        await this.googleClassroom.addStudent(classRoom.googleExternalId, userAccountExists.email)
 
         await this.userToClassroom.saveUserToClassroom(data.userId, classRoom.id)
     }

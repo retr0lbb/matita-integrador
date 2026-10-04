@@ -1,9 +1,9 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../ports/classroom.repository";
+import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../../domain/ports/classroom.repository";
 import { UNIT_REPOSITORY, type UnitRepository } from "../../../unit/domain/unity.repository";
-import { Classroom, ClassroomStatus } from "../classroom.entity";
+import { Classroom, ClassroomStatus } from "../../domain/classroom.entity";
 import { randomUUID } from "crypto";
-import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../ports/google-classroom-client";
+import { GOOGLE_CLASSROOM_CLIENT, type GoogleClassroomClient } from "../../domain/ports/google-classroom-client";
 import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../../../accounts/domain/google-account-provider";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../../../accounts/domain/account.repository";
 import { USER_REPOSITORY, type UserRepository } from "../../../users/domain/user.repository";
@@ -35,7 +35,7 @@ export class CreateClassRoomUseCase{
             throw new NotFoundException("Unity Not Found")
         }
 
-        const status = payload.status? ClassroomStatus[payload.status]: ClassroomStatus.ACTIVE
+        const status = ClassroomStatus.INACTIVE
 
         const account = await this.accountRepository.findById(payload.ownerAccountId)
 
@@ -53,11 +53,23 @@ export class CreateClassRoomUseCase{
             throw new ForbiddenException("User from role ALUNO cannot create a classroom")
         }
 
+        const classroom = Classroom.create({
+            externalId: null,
+            status,
+            title: payload.title,
+            unitId,
+            googleExternalId: null,
+            ownerId: account.id
+        })
+
+        await this.classRoomRepository.save(classroom)
+
         if(!account.email){
             throw new Error("Cannot create a classroom without google account")
         }
 
         const googleAccount = await this.googleAccountProvider.findAccount(account.email.getValue())
+
 
         if(googleAccount === null){
             throw new NotFoundException("Google Account not found")
@@ -68,16 +80,9 @@ export class CreateClassRoomUseCase{
             ownerEmail: googleAccount.email
         })
 
-        const classroom = Classroom.create({
-            externalId: googleClassRoomId,
-            id: randomUUID(),
-            location: payload.location ?? null,
-            status,
-            title: payload.title,
-            unitId,
-            ownerId: account.id
-        })
+        classroom.activate(googleClassRoomId)
 
         await this.classRoomRepository.save(classroom)
+
     }
 }

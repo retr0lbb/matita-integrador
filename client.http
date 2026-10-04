@@ -5,8 +5,8 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Henrique",
-  "lastName": "Barbosa",
+  "firstName": "Satoro",
+  "lastName": "Gojo",
   "role": "PROFESSOR",
   "syncMode": "NONE"
 }
@@ -17,11 +17,11 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "d0fa19ac-df91-426c-b52c-f42db7cf124d"
+  "userId": "f6a568d5-93fe-44aa-bacd-e2b6e1ee7c0e"
 }
 
 ### get unique account
-GET {{baseUrl}}/accounts/92782d6a-6d7f-44b1-abd4-1b7850800d6e
+GET {{baseUrl}}/accounts/030ca590-d7f2-45ce-aa5c-8dee5745adc3
 
 ### list all accounts
 GET {{baseUrl}}/accounts
@@ -51,25 +51,35 @@ POST {{baseUrl}}/unit
 Content-Type: application/json
 
 {
-  "institutionId": "a8fceb2f-abfc-473a-b78f-46b263d86217",
+  "institutionId": "38edbaeb-e23e-472d-8b7d-829e289d9f88",
   "alias": "Maplebear Krypton",
   "address": null,
   "externalId": "1e91311d-f082-42ce-9a9d-c7a8cfbb2710"
 }
 
-###
-POST {{baseUrl}}/unit/3b2f429c-5ebb-4d7d-9c6d-6f1657591b1b/classroom
+# ===== CLASSROOMS ======
+### create classroom
+POST {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
 Content-Type: application/json
 
 {
-  "title": "JUJUTSU Tokio Grau especial",
-  "ownerAccountId": "4b6a3d2b-d4d0-417b-85a1-01cd5f31fdbc"
+  "title": "Jujutsu 2° Kyoto",
+  "ownerAccountId": "030ca590-d7f2-45ce-aa5c-8dee5745adc3"
 }
 
-###
-POST {{baseUrl}}/classroom/1e1ea83b-6119-4462-b181-8c3c643865ff/add
+### List classrooms
+GET {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
+
+### archive classroom
+DELETE {{baseUrl}}/classroom/3b703afd-8e7a-45f2-882f-608c62ad4912
+
+### add student to classRoom
+POST {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420/add
 Content-Type: application/json
 
 {
-  "userId": "7e15e6dd-f3a8-45b1-a52e-925da0d10d4c"  
+  "userId": "64df60ff-4a5e-4bf6-a9b8-3bcbbe2d2b97"  
 }
+
+### Get classroom
+GET {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420

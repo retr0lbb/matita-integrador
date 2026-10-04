@@ -4,19 +4,46 @@ import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { AccountRepository } from "../../domain/account.repository";
 import { Account, ExternalProvider } from "../../domain/account.entity";
 import { accountTable } from "../../../database/schemas/accountSchema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { Email } from "../../../shared/domains/value-objects/email.vo";
 import { AccountStatus } from "../../domain/value-objects/account-status.vo";
 import { usersTable } from "../../../database/schemas/userSchema";
 import { UserNotFoundError } from "../../../users/app/error/user-not-found";
 import { AccountNotFoundError } from "../../domain/errors/account-not-found";
-
+import { UserAccount, UserAndAccountProvider } from "../../domain/user-and-account.port";
 
 @Injectable()
-export class DrizzleAccountRepository implements AccountRepository{
+export class DrizzleAccountRepository implements AccountRepository, UserAndAccountProvider{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase,
     ){}
+    
+    async findByUserIdsAndProvider(
+        userIds: string[],
+        provider: ExternalProvider,
+    ): Promise<UserAccount[]> {
+        if (userIds.length === 0) return [];
+
+        const rows = await this.db
+            .select({
+                userId: accountTable.userId,
+                accountId: accountTable.id,
+                email: accountTable.email,
+                provider: accountTable.provider,
+            })
+            .from(accountTable)
+            .where(
+                and(
+                    inArray(accountTable.userId, userIds),
+                    eq(accountTable.provider, provider as "LEX" | "GOOGLE"),
+                ),
+            );
+
+        return rows.map((row) => ({
+            ...row,
+            provider: row.provider as ExternalProvider,
+        }));
+    }
 
     async findByEmailAndExternalProvider(email: string, provider: ExternalProvider): Promise<Account | null> {
         const [account] = await this.db.select().from(accountTable)

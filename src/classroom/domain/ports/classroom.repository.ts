@@ -1,3 +1,4 @@
+import { User } from "../../../users/domain/user.entity";
 import { Classroom } from "../classroom.entity";
 
 export const CLASSROOM_REPOSITORY = Symbol('CLASSROOM_REPOSITORY');
@@ -7,4 +8,6 @@ export interface ClassRoomRepository{
     findById(id: string): Promise<Classroom | null>
     findByProviderExternalId(id: string): Promise<Classroom | null>
     listClassrooms(): Promise<Classroom[]>
+    listUnitClassrooms(unitId: string): Promise<Classroom[]>
+    getClassStudents(classRoom: Classroom): Promise<User[]> 
 }

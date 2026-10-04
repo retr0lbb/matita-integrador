@@ -1,0 +1,2 @@
+ALTER TABLE "classrooms" RENAME CONSTRAINT "classrooms_owner_id_users_id_fkey" TO "classrooms_owner_id_accounts_id_fkey";--> statement-breakpoint
+ALTER TABLE "classrooms" DROP CONSTRAINT "classrooms_owner_id_accounts_id_fkey", ADD CONSTRAINT "classrooms_owner_id_accounts_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "accounts"("id");

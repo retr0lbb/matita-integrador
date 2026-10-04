@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { ClassRoomRepository } from "../domain/ports/classroom.repository";
 import { Classroom, ClassroomStatus } from "../domain/classroom.entity";
 import { DRIZZLE } from "../../database/providers/drizzle.provider";
@@ -8,9 +8,14 @@ import { and, eq } from "drizzle-orm";
 import { usersTable } from "../../database/schemas/userSchema";
 import { classRoomUsersTable } from "../../database/schemas/classroomUsers";
 import { ClassroomOwner, ClassroomOwnerQuery } from "../domain/ports/classroom-owner.query";
-import { accountTable } from "../../database/schemas/accountSchema";
+import { accountStatus, accountTable } from "../../database/schemas/accountSchema";
 import { UserRole } from "../../users/domain/value-objects/user-role";
 import { UserClassRepository, UserClassroomRelation } from "../domain/ports/user-classroom.repository";
+import { ClassNotActiveError } from "../domain/errors/class-not-active";
+import { UserAlreadyInClass } from "../domain/errors/user-already-in-class";
+import { unitTable } from "../../database/schemas/unitSchema";
+import { UnitNotFound } from "../../unit/domain/errors/unit-not-found";
+import { User } from "../../users/domain/user.entity";
 
 
 @Injectable()
@@ -19,11 +24,22 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
     
-    getUserToClassroom(userId: string, classroomId: string): Promise<UserClassroomRelation | null> {
-        throw new Error("Method not implemented.");
+    async getUserToClassroom(userId: string, classroomId: string): Promise<UserClassroomRelation | null> {
+        const [exist] = await this.db.select().from(classRoomUsersTable)
+        .where(and(
+            eq(classRoomUsersTable.userId, userId),
+            eq(classRoomUsersTable.classRoomId, classroomId)            
+        ))
+        
+        return exist
     }
-    saveUserToClassroom(userId: string, classroomId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async saveUserToClassroom(userId: string, classroomId: string): Promise<void> {
+        await this.db.insert(classRoomUsersTable).values({
+            classRoomId: classroomId,
+            userId: userId,
+            status: "DONE" //mudar para modelo dps
+        })
     }
 
     async findByUserId(userId: string): Promise<ClassroomOwner | null> {
@@ -55,9 +71,19 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             unitId: classroom.unitId,
             externalId:  classroom.externalId,
             id:  classroom.id,
-            location: classroom.location,
+            googleClassroomId: classroom.googleExternalId,
             status: classroom.status,
             ownerId: classroom.ownerId
+        }).onConflictDoUpdate({
+            target: classRoomTable.id,
+            set: {
+                title: classroom.title,
+                unitId: classroom.unitId,
+                externalId: classroom.externalId,
+                googleClassroomId: classroom.googleExternalId,
+                status: classroom.status,
+                ownerId: classroom.ownerId,
+            }
         })
     }
 
@@ -69,15 +95,34 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             throw new Error("Classroom not found")
         }
 
-        return Classroom.create({
+        return Classroom.reconstitute({
             externalId: classroom.externalId, 
             id: classroom.id, 
-            location: classroom.location,
             status: classroom.status as ClassroomStatus,
             title: classroom.title,
+            googleExternalId: classroom.googleClassroomId,
             unitId: classroom.unitId,
             ownerId: classroom.ownerId
         })
+    }
+
+    async getClassStudents(classRoom: Classroom): Promise<User[]> {
+
+        const classStudents = await this.db.select({user: usersTable})
+        .from(classRoomUsersTable)
+        .innerJoin(usersTable, eq(usersTable.id, classRoomUsersTable.userId))
+        .where(
+            eq(classRoomUsersTable.classRoomId, classRoom.id)
+        )
+
+        return classStudents.map(student => User.reconstitute({
+            createdAt: student.user.createdAt,
+            firstName: student.user.firstName,
+            id: student.user.id,
+            lastName: student.user.lastName,
+            role: student.user.role as UserRole,
+            updatedAt: student.user.updatedAt
+        }))
     }
     
     findByProviderExternalId(id: string): Promise<Classroom | null> {
@@ -87,13 +132,33 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
     async listClassrooms(): Promise<Classroom[]> {
         const classRooms = await this.db.select().from(classRoomTable)
 
-        return classRooms.map((classroom) => Classroom.create({
+        return classRooms.map((classroom) => Classroom.reconstitute({
             externalId: classroom.externalId, 
             id: classroom.id, 
-            location: classroom.location,
             status: classroom.status as ClassroomStatus,
             title: classroom.title,
             unitId: classroom.unitId,
+            googleExternalId: classroom.googleClassroomId,
+            ownerId: classroom.ownerId
+        }))
+    }
+
+    async listUnitClassrooms(unitId: string): Promise<Classroom[]> {
+        const unit = await this.db.select().from(unitTable).where(eq(unitTable.id, unitId))
+
+        if(!unit){
+            throw new UnitNotFound()
+        }
+
+        const classRooms = await this.db.select().from(classRoomTable).where(eq(classRoomTable.unitId, unitId))
+
+        return classRooms.map((classroom) => Classroom.reconstitute({
+            externalId: classroom.externalId, 
+            id: classroom.id, 
+            status: classroom.status as ClassroomStatus,
+            title: classroom.title,
+            unitId: classroom.unitId,
+            googleExternalId: classroom.googleClassroomId,
             ownerId: classroom.ownerId
         }))
     }
@@ -112,7 +177,7 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
         }
 
         if(classRoom.status === "INACTIVE"){
-            throw new BadRequestException("ClassRoom Inactive please activate this classroom before it works")
+            throw new ClassNotActiveError()
         }
 
         const [relation] = await this.db.select()
@@ -123,7 +188,7 @@ export class DrizzleClassroomRepository implements ClassRoomRepository,UserClass
             ))
 
         if(relation){
-            throw new BadRequestException("User Already in this classRoom")
+            throw new UserAlreadyInClass()
         }
 
         await this.db.insert(classRoomUsersTable).values({
