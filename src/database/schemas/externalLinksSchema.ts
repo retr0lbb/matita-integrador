@@ -6,7 +6,6 @@ import { classRoomTable } from "./classRoomSchema";
 
 export const linkOriginEnum = pgEnum("link_origin", ["SYNC", "MANUAL", "AUTO_MATCH"]);
 
-// função (e não const) pra cada tabela receber builders novos
 const externalLinkColumns = () => ({
     provider: providerEnum("provider").notNull(),
     externalId: varchar("external_id").notNull(),      // identificador canônico

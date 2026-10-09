@@ -5,6 +5,7 @@ import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { institutionTable } from "../../database/schemas/institutionSchema";
 import { eq } from "drizzle-orm";
+import { InstitutionLinkPort } from "../domain/institutions-link";
 
 
 @Injectable()
@@ -16,7 +17,6 @@ export class DrizzleInstitutionRepository implements InstitutionRepository{
 
     async save(account: Institution): Promise<void> {
         await this.db.insert(institutionTable).values({
-            apiKey: account.apiKey,
             name: account.name,
             id: account.id
         })
@@ -32,7 +32,6 @@ export class DrizzleInstitutionRepository implements InstitutionRepository{
 
         const model = Institution.create({
             id: inst.id,
-            apiKey: inst.apiKey,
             name: inst.name
         })
 
@@ -42,20 +41,9 @@ export class DrizzleInstitutionRepository implements InstitutionRepository{
     async listInstitutions(): Promise<Institution[]> {
         const insts = await this.db.select().from(institutionTable)
         
-        const models = insts.map(inst => Institution.create({id: inst.id, apiKey: inst.apiKey, name: inst.name}))
+        const models = insts.map(inst => Institution.create({id: inst.id, name: inst.name}))
 
         return models
     }
 
-    async findByApiKey(apiKey: string): Promise<Institution | null> {
-        const [inst] = await this.db.select().from(institutionTable).where(eq(institutionTable.apiKey, apiKey))
-
-        if(!inst){
-            throw new Error("Institution doesnot exists")
-        }
-
-        const model = Institution.create({id: inst.id, apiKey: inst.apiKey, name: inst.name})
-
-        return model
-    }
 }
