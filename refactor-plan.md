@@ -1,7 +1,6 @@
 
 - [ ] fix routes for institution
-    - [O] Remove API KEY from params
-    - [ ] add agent config on database instead of env
+    - [x] Remove API KEY from params
     - [ ] add 2 ways integration lex <-> google
     - [O] automatically create paths for locally created institutions 
 - [ ] fix routes for units

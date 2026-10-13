@@ -37,13 +37,18 @@ Content-Type: application/json
   "orgPath": "/Integrador-teste/Maplebear - Krypton"
 }
 
-###
+# ==================== INSTITUTIONS =========================
+### CREATE INSTITUTION
 POST {{baseUrl}}/institution
 Content-Type: application/json
 
 {
-  "name": "Maplebear Krypton"
+  "name": "Maplebear"
 }
+
+### LIST INSTITUTION
+GET {{baseUrl}}/institution
+Accept: application/json
 
 ###
 POST {{baseUrl}}/unit
