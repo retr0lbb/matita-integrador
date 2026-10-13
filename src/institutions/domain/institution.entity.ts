@@ -2,9 +2,7 @@
 type InstitutionCreatePayload = {
     name: string,
     id: string
-
 }
-
 
 export class Institution{
     private constructor(
@@ -26,5 +24,4 @@ export class Institution{
     public get name() : string {
         return this._name
     }
-
 }

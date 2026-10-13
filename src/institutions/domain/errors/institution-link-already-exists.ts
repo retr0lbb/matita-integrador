@@ -1,10 +1,7 @@
-import { DomainError } from "../../../shared/domains/domain.error";
+import { ConflictError } from "../../../shared/domains/conflict.error";
 
-
-export class InstitutionLinkAlreadyExists extends DomainError {
-  code: string;
-  constructor(code: string) {
+export class InstitutionLinkAlreadyExists extends ConflictError {
+  constructor() {
     super("Institution Link already Exists");
-    this.code = code
   }
 }

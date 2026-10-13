@@ -21,12 +21,12 @@ export class ListUnitClassesUseCase{
             throw new UnitNotFound()
         }
 
-        const classRooms = await this.classroomRepo.listUnitClassrooms(unitId)
+        const classRooms = await this.unitRepo.listUnitClassrooms(unitId)
 
         const mappedClassrooms = classRooms.map(classroom => ({
             id: classroom.id,
             title: classroom.title,
-            clasroomId: classroom.googleExternalId,
+            googleClassroomId: classroom.googleId,
             status: classroom.status,
             createdAt: classroom.createdAt
         }))

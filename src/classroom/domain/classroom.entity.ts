@@ -1,14 +1,15 @@
-import { randomUUID } from "crypto"
+import { privateDecrypt, randomUUID } from "crypto"
 
 
 export enum ClassroomStatus {
     ACTIVE = "ACTIVE",
+    PENDING = "PENDING",
     INACTIVE = "INACTIVE",
 }
 
 type CreateClassroomPayload = {
-    externalId: string | null,
-    googleExternalId: string | null
+    lexId?: string,
+    googleId?: string
     unitId: string,
     title: string,
     status: ClassroomStatus,
@@ -17,8 +18,8 @@ type CreateClassroomPayload = {
 
 type ReconstituteClassroomPayload = {
     id: string,
-    externalId: string | null,
-    googleExternalId: string | null
+    lexId: string | null,
+    googleId: string | null
     unitId: string,
     title: string,
     status: ClassroomStatus,
@@ -27,8 +28,8 @@ type ReconstituteClassroomPayload = {
 export class Classroom{
     private constructor(
         private readonly _id: string,
-        private _externalId: string | null,
-        private _googleExternalId: string | null, //Smelly code but for now it will work as intended   
+        private _lexId: string | null,
+        private _googleId: string | null,
         private readonly _unitId: string,
         private _title: string,
         private _status: ClassroomStatus,
@@ -39,8 +40,8 @@ export class Classroom{
     static create(payload: CreateClassroomPayload): Classroom{
         return new Classroom(
             randomUUID(),
-            payload.externalId, 
-            payload.googleExternalId,
+            payload.lexId ?? null,
+            payload.googleId ?? null,
             payload.unitId, 
             payload.title, 
             payload.status, 
@@ -52,8 +53,8 @@ export class Classroom{
     static reconstitute(payload: ReconstituteClassroomPayload): Classroom{
         return new Classroom(
             payload.id, 
-            payload.externalId, 
-            payload.googleExternalId,
+            payload.lexId, 
+            payload.googleId,
             payload.unitId, 
             payload.title, 
             payload.status, 
@@ -67,8 +68,8 @@ export class Classroom{
         return this._id
     }
 
-    public get externalId(): string | null{
-        return this._externalId
+    public get lexId(): string | null{
+        return this._lexId
     }
 
     public get unitId(): string {
@@ -90,16 +91,16 @@ export class Classroom{
     public get ownerId(): string{
         return this._ownerId
     }
-    public get googleExternalId(): string | null{
-        return this._googleExternalId
+    public get googleId(): string | null{
+        return this._googleId
     }
 
-    deactivate(){
+    public deactivate(){
         this._status = ClassroomStatus.INACTIVE
     }
 
-    activate(googleExtenalId: string){
+    public activate(googleId: string){
+        this._googleId = googleId
         this._status = ClassroomStatus.ACTIVE
-        this._googleExternalId = googleExtenalId
     }
 }

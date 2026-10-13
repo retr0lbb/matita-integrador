@@ -5,7 +5,6 @@ import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { institutionTable } from "../../database/schemas/institutionSchema";
 import { eq } from "drizzle-orm";
-import { InstitutionLinkPort } from "../domain/institutions-link";
 
 
 @Injectable()

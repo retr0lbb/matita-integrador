@@ -40,7 +40,7 @@ function hasChange(current: SyncRecord, other: SyncRecord){
         current.firstName !== other.firstName ||
         current.lastName !== other.firstName ||
         current.email !== other.email ||
-        current.turmaExternalId !== other.turmaExternalId ||
+        current.lexExternalId !== other.lexExternalId ||
         current.role !== other.role
     )
 

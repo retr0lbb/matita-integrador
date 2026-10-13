@@ -30,12 +30,11 @@ export class CreateUnityUseCase{
 
         const unitModel = Unit.create({
             address: payload.address, 
-            alias: payload.alias, 
-            externalId: payload.externalId,
+            alias: payload.alias,
             id: randomUUID(),
             institutionId: institution.id
         })
-
+        
         await this.unityRepository.save(unitModel)
     }
 }

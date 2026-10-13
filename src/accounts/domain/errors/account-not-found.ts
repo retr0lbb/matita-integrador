@@ -1,9 +1,7 @@
-import { DomainError } from "../../../shared/domains/domain.error";
+import { NotFoundError } from "../../../shared/domains/not-found.error";
 
-export class AccountNotFoundError extends DomainError{
-    code = "ACCOUNT_NOT_FOUND"
-
-    constructor(){
-        super("Account not found")
-    }
+export class AccountNotFoundError extends NotFoundError {
+  constructor() {
+    super("Account not found");
+  }
 }

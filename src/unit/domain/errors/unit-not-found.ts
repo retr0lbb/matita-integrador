@@ -1,9 +1,7 @@
-import { DomainError } from "../../../shared/domains/domain.error";
+import { NotFoundError } from "../../../shared/domains/not-found.error";
 
-export class UnitNotFound extends DomainError{
-    code: string = "UNIT_NOT_FOUND"
-
-    constructor(){
-        super("Unit Not found")
-    }
+export class UnitNotFound extends NotFoundError {
+  constructor() {
+    super("Unit Not found");
+  }
 }

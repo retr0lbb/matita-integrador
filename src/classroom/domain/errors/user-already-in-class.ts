@@ -1,8 +1,7 @@
-import { DomainError } from "../../../shared/domains/domain.error";
+import { ConflictError } from "../../../shared/domains/conflict.error";
 
-export class UserAlreadyInClass extends DomainError{
-    code = "USER_ALREADY_IN_CLASS"
-    constructor(){
-        super("User already in class")
-    }
+export class UserAlreadyInClass extends ConflictError {
+  constructor() {
+    super("User already in class");
+  }
 }

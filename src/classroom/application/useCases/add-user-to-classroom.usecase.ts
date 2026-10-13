@@ -6,7 +6,6 @@ import { GOOGLE_ACCOUNT_PROVIDER, type GoogleAccountProviderClient } from "../..
 import { CLASSROOM_REPOSITORY, type ClassRoomRepository } from "../../domain/ports/classroom.repository";
 import { UserRole } from "../../../users/domain/value-objects/user-role";
 
-
 @Injectable()
 export class AddUserToClassRoom{
     constructor(
@@ -34,9 +33,9 @@ export class AddUserToClassRoom{
             throw new Error("Google Id or email must be provided")
         }
 
-        const classRoom = await this.classRoomRepository.findById(classRoomId)
+        const classRoom = await this.classRoomRepository.findClassroomById(classRoomId)
 
-        if(!classRoom || !classRoom.googleExternalId){
+        if(!classRoom || !classRoom.googleId){
             throw new Error("Classroom doesnot exists or has not been created yet")
         }
 
@@ -50,13 +49,13 @@ export class AddUserToClassRoom{
             throw new Error("Only students must be able to be added into a classroom")
         }
 
-        const classRoomClassExistis = await this.googleClassroom.findClassroom(classRoom.googleExternalId)
+        const classRoomClassExistis = await this.googleClassroom.findClassroom(classRoom.googleId)
 
         if(!classRoomClassExistis){
             throw new Error("Classroom doesnot exists")
         }
 
-        await this.googleClassroom.addStudent(classRoom.googleExternalId, userAccountExists.email)
+        await this.googleClassroom.addStudent(classRoom.googleId, userAccountExists.email)
 
         await this.userToClassroom.saveUserToClassroom(data.userId, classRoom.id)
     }

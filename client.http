@@ -27,7 +27,7 @@ GET {{baseUrl}}/accounts/030ca590-d7f2-45ce-aa5c-8dee5745adc3
 GET {{baseUrl}}/accounts
 
 ### delete account with google
-DELETE {{baseUrl}}/accounts/da249e76-3f93-4b55-bb23-9b07df894e78
+DELETE {{baseUrl}}/accounts/cd8baa13-a49f-4981-ad1c-cbbc899bf154
 
 ### import from google
 POST {{baseUrl}}/accounts/import/google
@@ -42,8 +42,7 @@ POST {{baseUrl}}/institution
 Content-Type: application/json
 
 {
-  "name": "maplebear",
-  "apiKey": "f7a8442f-4ac5-4659-894f-d8663800b521"
+  "name": "Maplebear Krypton"
 }
 
 ###

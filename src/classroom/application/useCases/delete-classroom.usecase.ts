@@ -11,14 +11,14 @@ export class DeleteClassRoomUsecase{
     ){}
 
     async execute(classId: string){
-        const classroom = await this.classroomRepo.findById(classId)
+        const classroom = await this.classroomRepo.findClassroomById(classId)
         if(!classroom){
             console.log("Classroom Not defined")
             return
         }
 
-        if(classroom.googleExternalId){
-            await this.googleClient.archiveClassroom(classroom.googleExternalId)
+        if(classroom.googleId){
+            await this.googleClient.archiveClassroom(classroom.googleId)
         }
 
         classroom.deactivate()

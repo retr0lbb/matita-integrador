@@ -1,10 +1,7 @@
-import { DomainError } from "../../../shared/domains/domain.error";
+import { NotFoundError } from "../../../shared/domains/not-found.error";
 
-
-export class InstitutionNotFound extends DomainError {
-  code: string;
-  constructor(code: string) {
+export class InstitutionNotFound extends NotFoundError {
+  constructor() {
     super("Institution Not Found");
-    this.code = code
   }
 }

@@ -8,11 +8,9 @@ export class GlobalExceptionFilter implements ExceptionFilter{
         const response = ctx.getResponse()
 
         if(exception instanceof DomainError){
-            response.status(this.getStatus(exception)).json({
-                statusCode: this.getStatus(exception),
-                code: exception.code,
-                message: exception.message,
-            });
+            response.status(exception.statusCode ?? 400).json({
+              message: exception.message
+            })
 
             return
         }
@@ -26,21 +24,4 @@ export class GlobalExceptionFilter implements ExceptionFilter{
         })
 
     }
-
-
-    private getStatus(error: DomainError): number {
-    switch (error.code) {
-      case "USER_NOT_FOUND":
-      case "ACCOUNT_NOT_FOUND":
-        return 404;
-
-      case "USER_ALREADY_EXISTS":
-      case "ACCOUNT_ALREADY_EXISTS":
-        return 409;
-
-      default:
-        return 400;
-    }
-  }
-
 }

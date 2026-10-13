@@ -8,7 +8,7 @@ export type SyncRecord = {
   firstName: string,
   lastName: string;
   email: string | undefined;
-  turmaExternalId: string | null;
+  turmaGoogleId: string | null;
   role: 'ALUNO' | 'PROFESSOR';
   syncHash?: string;
 };
@@ -20,7 +20,7 @@ export function toSyncRecord(user: User, classRoom: Classroom, account: Account 
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role as "ALUNO" | "PROFESSOR",
-        turmaExternalId: classRoom.externalId,
+        turmaGoogleId: classRoom.googleId,
         syncHash: account.syncHash ?? undefined
     }
 }

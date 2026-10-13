@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { InstitutionLinkPort } from "../domain/institutions-link";
+import { ConnectInstitution, InstitutionLinkPort } from "../domain/institutions-link";
 import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { institutionTable } from "../../database/schemas/institutionSchema";
@@ -16,7 +16,7 @@ export class LinkToGoogleAdapter implements InstitutionLinkPort{
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
 
-    async connectInstitution(data: {creds: string, institutionId: string; provider: "LEX" | "GOOGLE"; externalId: string; externalPath?: string; metadata?: Record<string, unknown>; syncHash?: string | null; origin: "SYNC" | "MANUAL" | "AUTO_MATCH"; lastSyncedAt: Date; }): Promise<void> {
+    async connectInstitution(data: ConnectInstitution): Promise<void> {
         const [institution] = await this.db.select()
             .from(institutionTable)
             .where(eq(
@@ -25,7 +25,7 @@ export class LinkToGoogleAdapter implements InstitutionLinkPort{
             ))
 
         if(!institution){
-            throw new InstitutionNotFound("INSTITUTION_NOT_FOUND")
+            throw new InstitutionNotFound()
         }
 
         const [link] = await this.db.select()
@@ -41,7 +41,7 @@ export class LinkToGoogleAdapter implements InstitutionLinkPort{
         )
 
         if(link){
-            throw new InstitutionLinkAlreadyExists("ALREADY_EXITS")
+            throw new InstitutionLinkAlreadyExists()
         }
 
         //aqui entra algum service de google

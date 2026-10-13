@@ -5,9 +5,7 @@ export const CLASSROOM_REPOSITORY = Symbol('CLASSROOM_REPOSITORY');
 
 export interface ClassRoomRepository{
     save(classroom: Classroom): Promise<void>
-    findById(id: string): Promise<Classroom | null>
-    findByProviderExternalId(id: string): Promise<Classroom | null>
+    findClassroomById(id: string): Promise<Classroom | null>
+    findByProviderExternalId(externalId: string, provider: "LEX" | "GOOGLE"): Promise<Classroom | null>
     listClassrooms(): Promise<Classroom[]>
-    listUnitClassrooms(unitId: string): Promise<Classroom[]>
-    getClassStudents(classRoom: Classroom): Promise<User[]> 
 }

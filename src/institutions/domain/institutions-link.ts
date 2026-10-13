@@ -2,7 +2,7 @@ import { Institution } from "./institution.entity"
 
 export const INSTITUTION_LINK = Symbol('INSTITUTION_LINK');
 
-type ConnectInstitution = {
+export type ConnectInstitution = {
     creds: string,
     institutionId: string,
     externalId: string,

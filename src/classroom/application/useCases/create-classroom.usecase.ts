@@ -54,11 +54,9 @@ export class CreateClassRoomUseCase{
         }
 
         const classroom = Classroom.create({
-            externalId: null,
             status,
             title: payload.title,
             unitId,
-            googleExternalId: null,
             ownerId: account.id
         })
 
@@ -69,7 +67,6 @@ export class CreateClassRoomUseCase{
         }
 
         const googleAccount = await this.googleAccountProvider.findAccount(account.email.getValue())
-
 
         if(googleAccount === null){
             throw new NotFoundException("Google Account not found")

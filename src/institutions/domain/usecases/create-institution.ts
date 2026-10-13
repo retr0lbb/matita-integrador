@@ -16,7 +16,7 @@ export class CreateInstitutionUseCase{
     ){}
 
     async execute(payload: CreateInstitutionPayload){
-        const model = Institution.create({id: randomUUID(), apiKey: payload.apiKey, name: payload.name})
+        const model = Institution.create({id: randomUUID(), name: payload.name})
         await this.repo.save(model)
     }
 }
