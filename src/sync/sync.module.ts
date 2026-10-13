@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { GoogleSyncScheduler } from './services/account.cron';
+import { GoogleSyncScheduler } from './infra/account.cron';
 import { AccountModule } from '../accounts/accounts.module';
 
 @Module({
