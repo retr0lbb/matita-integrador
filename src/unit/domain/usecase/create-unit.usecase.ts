@@ -9,7 +9,6 @@ export type CreateUnitUseCasePayload = {
     institutionId: string,
     alias: string,
     address: string | null,
-    externalId: string
 }
 
 

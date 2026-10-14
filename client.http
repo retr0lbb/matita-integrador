@@ -37,24 +37,26 @@ Content-Type: application/json
   "orgPath": "/Integrador-teste/Maplebear - Krypton"
 }
 
-###
+### CREATE INSTITUTION
 POST {{baseUrl}}/institution
 Content-Type: application/json
 
 {
-  "name": "Maplebear Krypton"
+  "name": "Maplebear"
 }
 
-###
+### create unit
 POST {{baseUrl}}/unit
 Content-Type: application/json
 
 {
-  "institutionId": "38edbaeb-e23e-472d-8b7d-829e289d9f88",
-  "alias": "Maplebear Krypton",
-  "address": null,
-  "externalId": "1e91311d-f082-42ce-9a9d-c7a8cfbb2710"
+  "institutionId": "a9e2ed68-fc0c-44b6-a202-39f885a3592f",
+  "alias": "Maplebear Jujutsu Tokio",
+  "address": null
 }
+
+### LINK UNIT WITH GOOGLE
+POST {{baseUrl}}/unit/73cf1a0f-0918-4d47-a32c-fde53d421032/link/google
 
 # ===== CLASSROOMS ======
 ### create classroom
