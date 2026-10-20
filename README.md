@@ -97,3 +97,29 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
+
+
+## CHECK LIST FUNCIONANDO
+- [ok] CRIAR INSTITUICAO
+- [ok] CRIAR UNIDADE
+- [ok] LINKAR UNIDADE AO GOOGLE
+- [ok] Criar usuario
+- [ok] Criar conta de usuario
+- [ERROR] LINKAR CONTA DO USUARIO AO GOOGLE
+  hard coded path
+ - [ok] SEM ID FICA COM PEDING
+ - [ERROR] sem retorno de erro pro cliente
+- [ok] Listar contas
+- [ERROR] importar do google as contas
+  mesmo motivo ta hard coded o unit path
+  ta como variavel do body, trocar para id de unidade ou sla
+- [ok] delete de contas internas
+- [ok] criar classroom
+- [ok] listar classrooms
+- [ERRO] deletar classroom, undefined ID em findById
+- [ERRO] adicionar aluno a classroom FIND BY ID
+- [ERRO] listar sala de aula FIND BY ID
+
+
+- KXd4m6CjZ>nB9qY> DPS GYRO
+- Fbb*BU&Q2JDr4rH< JONNY

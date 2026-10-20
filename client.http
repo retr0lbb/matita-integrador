@@ -5,9 +5,9 @@ Content-Type: application/json
 
 {
   "externalId": null,
-  "firstName": "Satoro",
-  "lastName": "Gojo",
-  "role": "PROFESSOR",
+  "firstName": "Jhonny",
+  "lastName": "Joestar",
+  "role": "ALUNO",
   "syncMode": "NONE"
 }
 
@@ -17,7 +17,7 @@ POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "f6a568d5-93fe-44aa-bacd-e2b6e1ee7c0e"
+  "userId": "76c3bedb-7448-4dee-b8f0-535a265a6c5e"
 }
 
 ### get unique account
@@ -27,14 +27,14 @@ GET {{baseUrl}}/accounts/030ca590-d7f2-45ce-aa5c-8dee5745adc3
 GET {{baseUrl}}/accounts
 
 ### delete account with google
-DELETE {{baseUrl}}/accounts/cd8baa13-a49f-4981-ad1c-cbbc899bf154
+DELETE {{baseUrl}}/accounts/16757e91-9bfa-4019-a768-333294e2155e
 
 ### import from google
 POST {{baseUrl}}/accounts/import/google
 Content-Type: application/json
 
 {
-  "orgPath": "/Integrador-teste/Maplebear - Krypton"
+  "orgPath": "/Integrador-teste/Maplebear Jujutsu Tokio"
 }
 
 ### CREATE INSTITUTION
@@ -50,37 +50,37 @@ POST {{baseUrl}}/unit
 Content-Type: application/json
 
 {
-  "institutionId": "a9e2ed68-fc0c-44b6-a202-39f885a3592f",
+  "institutionId": "342ceae5-749c-45ea-88e0-2ebca2aa0b34",
   "alias": "Maplebear Jujutsu Tokio",
   "address": null
 }
 
 ### LINK UNIT WITH GOOGLE
-POST {{baseUrl}}/unit/73cf1a0f-0918-4d47-a32c-fde53d421032/link/google
+POST {{baseUrl}}/unit/bef0784f-d46b-4e9f-b589-c0436492c3d8/link/google
 
 # ===== CLASSROOMS ======
 ### create classroom
-POST {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
+POST {{baseUrl}}/unit/bef0784f-d46b-4e9f-b589-c0436492c3d8/classroom
 Content-Type: application/json
 
 {
   "title": "Jujutsu 2° Kyoto",
-  "ownerAccountId": "030ca590-d7f2-45ce-aa5c-8dee5745adc3"
+  "ownerAccountId": "cd3bba69-f243-4e62-aa00-f63e02637467"
 }
 
 ### List classrooms
-GET {{baseUrl}}/unit/c1ac1b80-7614-4f4d-b586-c6b6863db671/classroom
+GET {{baseUrl}}/unit/bef0784f-d46b-4e9f-b589-c0436492c3d8/classroom
 
 ### archive classroom
-DELETE {{baseUrl}}/classroom/3b703afd-8e7a-45f2-882f-608c62ad4912
+DELETE {{baseUrl}}/classroom/21517cc5-bd2b-41ec-a518-dc0b09d12b37
 
 ### add student to classRoom
-POST {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420/add
+POST {{baseUrl}}/classroom/21517cc5-bd2b-41ec-a518-dc0b09d12b37/add
 Content-Type: application/json
 
 {
-  "userId": "64df60ff-4a5e-4bf6-a9b8-3bcbbe2d2b97"  
+  "userId": "3a2899b6-7f64-4027-85b1-d35a750093cd"  
 }
 
 ### Get classroom
-GET {{baseUrl}}/classroom/7b1b9911-8afd-4b47-a6fd-05da59122420
+GET {{baseUrl}}/classroom/21517cc5-bd2b-41ec-a518-dc0b09d12b37
