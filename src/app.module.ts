@@ -7,7 +7,7 @@ import { InstitutionModule } from "./institutions/instutution.module";
 import { UnitModule } from "./unit/unit.module";
 import { ClassRoomModule } from "./classroom/classroom.module";
 import { SyncModule } from './sync/sync.module';
-import {ScheduleModule} from "@nestjs/schedule"
+import { ScheduleModule } from "@nestjs/schedule"
 
 @Module({
   imports: 
