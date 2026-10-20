@@ -1,5 +1,31 @@
 @baseUrl = http://localhost:3000
 
+# ============================================================
+# MATITA INTEGRADOR — REST CLIENT
+# ============================================================
+#
+# IDs reutilizados das requisições originais
+@userId = 76c3bedb-7448-4dee-b8f0-535a265a6c5e
+@accountId = 030ca590-d7f2-45ce-aa5c-8dee5745adc3
+@institutionId = 342ceae5-749c-45ea-88e0-2ebca2aa0b34
+@unitId = bef0784f-d46b-4e9f-b589-c0436492c3d8
+@ownerAccountId = cd3bba69-f243-4e62-aa00-f63e02637467
+@classroomId = 21517cc5-bd2b-41ec-a518-dc0b09d12b37
+@studentUserId = 3a2899b6-7f64-4027-85b1-d35a750093cd
+
+# Caminho da OU usado na importação do Google
+@googleOrgPath = /Integrador-teste/Maplebear Jujutsu Tokio
+
+
+# ============================================================
+# USERS
+# ============================================================
+
+### Criar usuário local
+# Cria um usuário no integrador. externalId nulo e syncMode NONE
+# indicam que ele está sendo criado sem vínculo/sincronização externa.
+# Depois de executar, atualize @userId com o ID retornado, se necessário.
+# @name createUser
 POST {{baseUrl}}/user
 Content-Type: application/json
 
@@ -11,33 +37,53 @@ Content-Type: application/json
   "syncMode": "NONE"
 }
 
-# ==== ACCOUNTS ====
-### create account
+
+# ============================================================
+# ACCOUNTS
+# ============================================================
+
+### Criar conta para um usuário
+# Cria uma conta associada ao usuário indicado por @userId.
 POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "userId": "76c3bedb-7448-4dee-b8f0-535a265a6c5e"
+  "userId": "{{userId}}"
 }
 
-### get unique account
-GET {{baseUrl}}/accounts/030ca590-d7f2-45ce-aa5c-8dee5745adc3
+### Consultar uma conta pelo ID
+GET {{baseUrl}}/accounts/{{accountId}}
+Accept: application/json
 
-### list all accounts
+### Listar contas
+# Use apenas quando precisar descobrir/inspecionar contas existentes.
+# Para testes recorrentes, prefira consultar @accountId diretamente.
 GET {{baseUrl}}/accounts
+Accept: application/json
 
-### delete account with google
-DELETE {{baseUrl}}/accounts/16757e91-9bfa-4019-a768-333294e2155e
+### Desativar conta
+# Esta operação não exclui definitivamente a conta: ela a desativa.
+# Confira @accountId antes de executar e valide o estado após a chamada.
+DELETE {{baseUrl}}/accounts/{{accountId}}
+Content-Length: 0
 
-### import from google
+### Importar contas do Google por caminho de OU
+# Importa para o banco local as contas encontradas na OU informada.
+# Esta requisição não deve ser tratada como criação de contas no Google.
 POST {{baseUrl}}/accounts/import/google
 Content-Type: application/json
 
 {
-  "orgPath": "/Integrador-teste/Maplebear Jujutsu Tokio"
+  "orgPath": "{{googleOrgPath}}"
 }
 
-### CREATE INSTITUTION
+
+# ============================================================
+# INSTITUTIONS
+# ============================================================
+
+### Criar instituição
+# Cria a instituição/rede à qual as unidades serão vinculadas.
 POST {{baseUrl}}/institution
 Content-Type: application/json
 
@@ -45,42 +91,71 @@ Content-Type: application/json
   "name": "Maplebear"
 }
 
-### create unit
+### LISTA INSTITUIÇÕES
+# Lista as instituições cadastradas
+GET {{baseUrl}}/institution
+Accept: application/json
+
+
+### LISTA UNIDADES LIGADAS A INSTITUIÇÃO
+GET {{baseUrl}}/institution/{{institutionId}}/units
+Accept: application/json
+
+
+# ============================================================
+# UNITS
+# ============================================================
+
+### Criar unidade dentro de uma instituição
+# @institutionId deve apontar para a instituição desejada.
 POST {{baseUrl}}/unit
 Content-Type: application/json
 
 {
-  "institutionId": "342ceae5-749c-45ea-88e0-2ebca2aa0b34",
+  "institutionId": "{{institutionId}}",
   "alias": "Maplebear Jujutsu Tokio",
   "address": null
 }
 
-### LINK UNIT WITH GOOGLE
-POST {{baseUrl}}/unit/bef0784f-d46b-4e9f-b589-c0436492c3d8/link/google
+### Criar estrutura de OUs para uma unidade no Google
+# Cria a estrutura de unidades organizacionais (OUs) da unidade no Google.
+# Confira @unitId e valide o resultado no Google Admin após executar.
+POST {{baseUrl}}/unit/{{unitId}}/link/google
+Accept: application/json
 
-# ===== CLASSROOMS ======
-### create classroom
-POST {{baseUrl}}/unit/bef0784f-d46b-4e9f-b589-c0436492c3d8/classroom
+# ============================================================
+# CLASSROOMS
+# ============================================================
+
+### Criar turma em uma unidade
+# Cria uma turma associada à unidade indicada na URL.
+# ownerAccountId identifica a conta proprietária da turma.
+POST {{baseUrl}}/unit/{{unitId}}/classroom
 Content-Type: application/json
 
 {
   "title": "Jujutsu 2° Kyoto",
-  "ownerAccountId": "cd3bba69-f243-4e62-aa00-f63e02637467"
+  "ownerAccountId": "{{ownerAccountId}}"
 }
 
-### List classrooms
-GET {{baseUrl}}/unit/bef0784f-d46b-4e9f-b589-c0436492c3d8/classroom
+### Listar turmas de uma unidade
+# Use para inspecionar as turmas da unidade; não precisa executar
+# esta listagem se você já conhece @classroomId.
+GET {{baseUrl}}/unit/{{unitId}}/classroom
 
-### archive classroom
-DELETE {{baseUrl}}/classroom/21517cc5-bd2b-41ec-a518-dc0b09d12b37
+### Consultar uma turma pelo ID
+GET {{baseUrl}}/classroom/{{classroomId}}
 
-### add student to classRoom
-POST {{baseUrl}}/classroom/21517cc5-bd2b-41ec-a518-dc0b09d12b37/add
+### Adicionar aluno a uma turma
+# Vincula o usuário indicado por @studentUserId à turma.
+POST {{baseUrl}}/classroom/{{classroomId}}/add
 Content-Type: application/json
 
 {
-  "userId": "3a2899b6-7f64-4027-85b1-d35a750093cd"  
+  "userId": "{{studentUserId}}"
 }
 
-### Get classroom
-GET {{baseUrl}}/classroom/21517cc5-bd2b-41ec-a518-dc0b09d12b37
+### Arquivar turma
+# Esta operação arquiva a turma; não a exclui definitivamente.
+# Confira @classroomId antes de executar e valide o estado após a chamada.
+DELETE {{baseUrl}}/classroom/{{classroomId}}

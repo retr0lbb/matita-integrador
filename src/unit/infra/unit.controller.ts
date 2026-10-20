@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from "@nestjs/common";
 import { type CreateUnitUseCasePayload, CreateUnityUseCase } from "../domain/usecase/create-unit.usecase";
 import { LinkUnitToGoogle } from "../domain/usecase/link-unit-google";
 

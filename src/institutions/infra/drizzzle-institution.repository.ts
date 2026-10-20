@@ -21,7 +21,6 @@ export class DrizzleInstitutionRepository implements InstitutionRepository{
         })
     }
 
-
     async findById(id: string): Promise<Institution | null> {
         const [inst] = await this.db.select().from(institutionTable).where(eq(institutionTable.id, id))
 

@@ -10,6 +10,7 @@ import { Classroom, ClassroomStatus } from "../../classroom/domain/classroom.ent
 import { classroomExternalLinkTable } from "../../database/schemas/externalLinksSchema";
 import { alias } from "drizzle-orm/pg-core";
 import { classRoomTable } from "../../database/schemas/classRoomSchema";
+import { Institution } from "../../institutions/domain/institution.entity";
 
 @Injectable()
 export class DrizzleUnitRepository implements UnitRepository{
@@ -126,5 +127,22 @@ export class DrizzleUnitRepository implements UnitRepository{
         }))
 
         return models
+    }
+
+    async findManyByInstitution(institution: Institution): Promise<Unit[]> {
+        const units = await this.db.select()
+        .from(unitTable)
+        .where(
+            eq(
+                unitTable.institutionId, institution.id
+            )
+        )
+
+        return units.map((unit) => Unit.create({
+            address: unit.address, 
+            alias: unit.alias,
+            id: unit.id,
+            institutionId: unit.institutionId
+        }))
     }
 }
