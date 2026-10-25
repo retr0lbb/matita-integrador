@@ -10,4 +10,5 @@ export interface UnitRepository{
     listUnity(): Promise<Unit[]>
     findManyByInstitution(institution: Institution): Promise<Unit[]> 
     listUnitClassrooms(unitId: string): Promise<Classroom[]>
+    findByExternalIdAndProvider(externalId: string, provider: "LEX" | "GOOGLE"): Promise<Unit>
 }

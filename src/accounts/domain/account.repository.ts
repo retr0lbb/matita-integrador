@@ -1,6 +1,13 @@
+import { User } from "../../users/domain/user.entity";
 import { Account, ExternalProvider } from "./account.entity";
 
 export const ACCOUNT_REPOSITORY = Symbol('ACCOUNT_REPOSITORY');
+
+
+export type AccountAndUser = {
+    account: Account,
+    user: User
+}
 
 export interface AccountRepository{
     save(account: Account): Promise<void>
@@ -11,5 +18,6 @@ export interface AccountRepository{
     listAccount(): Promise<Account[]>
     updateGoogleIdForAccount(account: Account): Promise<void>
     setFailedPending(account: Account): Promise<void>
-    delete(accountId: string): Promise<void>
+    delete(accountId: string): Promise<void> //ver o que eu posso cortar depois, talvez separar em mais portas
+    findManyByExternalProviderAndUnit(externalProvider: "GOOGLE" | "LEX", unitId: string): Promise<AccountAndUser[]>
 }

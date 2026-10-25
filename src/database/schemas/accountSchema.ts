@@ -9,6 +9,7 @@ export const accountStatus = pgEnum("account_status", [
 
 export const providerEnum = pgEnum('external_provider', ['LEX', 'GOOGLE']);
 
+//add de alguma unidade depois sla
 export const accountTable = pgTable("accounts", {
   id: uuid("id").primaryKey(),
   userId: uuid("user_id")

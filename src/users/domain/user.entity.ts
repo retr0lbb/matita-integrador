@@ -84,4 +84,8 @@ export class User {
         return this._updatedAt
     }
 
+    consolidateName(){
+        return `${this._firstName}${this._lastName}`
+    }
+
 }

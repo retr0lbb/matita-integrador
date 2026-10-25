@@ -1,21 +1,19 @@
 //url https://api.lex.education/sync/v1/tenants
 
 export type TenantSnapshot = {
-    syncId: string,
-    syncDateTime: Date,
+    syncId: string, //nao eh tao importante assim meu bom guerreiro
+    syncDateTime: Date, //apenas a data do sync, da pra meter idempotencia
     data: {
         id: string,
         tenantName: string
     }[]
 }
 
-
 //url https://api.lex.education/sync/v1/full?tenantId=[UUID do inquilino]
-// domain/sync/institution-snapshot.ts
 export type SnapshotRole = 'STUDENT' | 'TEACHER';
 
 export interface InstitutionSnapshot {
-  source: 'LEX' | 'CSV' | 'FAKE';
+  source: 'LEX' | 'FAKE';
   syncId: string;
   syncedAt: Date;
   institution: { externalId: string; name: string };
