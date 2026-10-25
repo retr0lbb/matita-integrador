@@ -7,6 +7,7 @@ export interface CreateUserInput {
   firstName: string;
   lastName: string
   role: UserRole;
+  unitId: string
 }
 
 @Injectable()

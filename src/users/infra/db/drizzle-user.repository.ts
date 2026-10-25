@@ -7,6 +7,8 @@ import { User } from "../../domain/user.entity";
 import type { UserRepository } from "../../domain/user.repository";
 import type { UserRole } from "../../domain/value-objects/user-role";
 import { UserAlreadyExistisError } from "../../app/error/user-already-existis";
+import { userUnitTable } from "../../../database/schemas/userUnitSchema";
+import { ConflictError } from "../../../shared/domains/conflict.error";
 
 @Injectable()
 export class DrizzleUserRepository implements UserRepository{
@@ -24,11 +26,18 @@ export class DrizzleUserRepository implements UserRepository{
             throw new UserAlreadyExistisError()
         }
 
-        await this.db.insert(usersTable).values({
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role
+        await this.db.transaction(async (tx) => {
+            await tx.insert(usersTable).values({
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role
+            })
+
+            await tx.insert(userUnitTable).values({
+                unitId: user.unitId,
+                userId: user.id
+            })
         })
     }
 
@@ -36,13 +45,20 @@ export class DrizzleUserRepository implements UserRepository{
         const [user] = await this.db.select()
             .from(usersTable)
             .where(eq(usersTable.id, id))
+
+        const [userUnit] = await this.db.select().from(userUnitTable).where(eq(userUnitTable.userId, id))
         
         if(!user){
             return null
         }
 
+        if(!userUnit){
+            throw new ConflictError("USER NOT IN A UNIT")
+        }
+
         return User.reconstitute({
             id: user.id,
+            unitId: userUnit.id,
             createdAt: user.createdAt,
             firstName: user.firstName,
             lastName: user.lastName,

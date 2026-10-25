@@ -5,6 +5,7 @@ import { UserAccountSyncRecord } from "../entities/userAccount-sync-record";
 import { ACCOUNT_REPOSITORY, type AccountRepository } from "../../../accounts/domain/account.repository";
 import { UNIT_REPOSITORY, type UnitRepository } from "../../../unit/domain/unity.repository";
 import { generateDiffReport } from "../diff-sync";
+import { User } from "../../../users/domain/user.entity";
 
 @Injectable()
 export class SyncLexToLex implements UseCase{
@@ -40,16 +41,29 @@ export class SyncLexToLex implements UseCase{
             lastName: undefined
         }))
 
-        const currentUserAccount = await this.accountRepo.findManyByExternalProviderAndUnit("LEX", unitRelatedToTenant.id)
+        const currentUserAccounts = await this.accountRepo.findManyByExternalProviderAndUnit("LEX", unitRelatedToTenant.id)
+        const localLexUserSyncState: UserAccountSyncRecord[] = []
+        const unlinkedUsers: User[] = []
 
-        const localLexUserSyncState = currentUserAccount.map((user) => new UserAccountSyncRecord({
-            externalId: user.account.externalId,
-            emailAccount: user.account.email ? user.account.email.getValue(): undefined,
-            hasHash: user.account.syncHash !== null,
-            syncHash: user.account.syncHash !== null? user.account.syncHash: undefined,
-            provider: user.account.provider as "LEX" | "GOOGLE",
-            firstName: user.user.consolidateName()
-        }))
+        for (const { account, user } of currentUserAccounts) {
+            // sem usuário não há o que comparar (não deveria acontecer, mas o tipo permite)
+            if (!user) continue
+
+            // está na unidade, mas não tem conta LEX vinculada
+            if (!account || account.externalId === null) {
+                unlinkedUsers.push(user)
+                continue
+            }
+
+            localLexUserSyncState.push(new UserAccountSyncRecord({
+                externalId: account.externalId,
+                emailAccount: account.email?.getValue(),
+                hasHash: account.syncHash !== null,
+                syncHash: account.syncHash ?? undefined,
+                provider: account.provider as "LEX" | "GOOGLE",
+                firstName: user.consolidateName(),
+            }))
+        }
 
         console.log(generateDiffReport(lexUsersSyncState, localLexUserSyncState)) //nao eh para parar aqui. 
         // esse ja seria o retorno mas ai teria que injetar no cron

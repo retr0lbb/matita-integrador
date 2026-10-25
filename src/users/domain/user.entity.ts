@@ -3,6 +3,7 @@ import { UserRole } from "./value-objects/user-role";
 type CreatePayload = {
     firstName: string,
     lastName: string,
+    unitId: string
     role: UserRole,
 }
 
@@ -10,6 +11,7 @@ type ReconstitutePayload = {
     id: string;
     firstName: string;
     lastName: string;
+    unitId: string
     role: UserRole;
     createdAt: Date;
     updatedAt: Date | null;
@@ -18,6 +20,7 @@ type ReconstitutePayload = {
 export class User {
     private constructor(
         private readonly _id: string,
+        private readonly _unitId: string,
         private _firstName: string,
         private _lastName: string,
         private readonly _role: UserRole,
@@ -31,7 +34,8 @@ export class User {
         }
 
         return new User(
-            crypto.randomUUID(), 
+            crypto.randomUUID(),
+            payload.unitId,
             payload.firstName, 
             payload.lastName, 
             payload.role,
@@ -43,6 +47,7 @@ export class User {
     static reconstitute(payload: ReconstitutePayload){
         return new User(
             payload.id,
+            payload.unitId,
             payload.firstName,
             payload.lastName,
             payload.role,
@@ -84,8 +89,11 @@ export class User {
         return this._updatedAt
     }
 
+    get unitId(): string{
+        return this._unitId
+    }
+
     consolidateName(){
         return `${this._firstName}${this._lastName}`
     }
-
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { DRIZZLE } from "../../../database/providers/drizzle.provider";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { AccountRepository } from "../../domain/account.repository";
+import { AccountAndUser, AccountRepository } from "../../domain/account.repository";
 import { Account, ExternalProvider } from "../../domain/account.entity";
 import { accountTable } from "../../../database/schemas/accountSchema";
 import { and, eq, inArray } from "drizzle-orm";
@@ -11,6 +11,11 @@ import { usersTable } from "../../../database/schemas/userSchema";
 import { UserNotFoundError } from "../../../users/app/error/user-not-found";
 import { AccountNotFoundError } from "../../domain/errors/account-not-found";
 import { UserAccount, UserAndAccountProvider } from "../../domain/user-and-account.port";
+import { unitTable } from "../../../database/schemas/unitSchema";
+import { UnitNotFound } from "../../../unit/domain/errors/unit-not-found";
+import { userUnitTable } from "../../../database/schemas/userUnitSchema";
+import { User } from "../../../users/domain/user.entity";
+import { UserRole } from "../../../users/domain/value-objects/user-role";
 
 @Injectable()
 export class DrizzleAccountRepository implements AccountRepository, UserAndAccountProvider{
@@ -66,6 +71,7 @@ export class DrizzleAccountRepository implements AccountRepository, UserAndAccou
 
         return constructed
     }
+
     async findByUserAndProvider(userId: string, accountProvider: ExternalProvider): Promise<Account | null> {
         const [user] = await this.db.select().from(usersTable).where(eq(usersTable.id, userId))
 
@@ -229,5 +235,59 @@ export class DrizzleAccountRepository implements AccountRepository, UserAndAccou
         })
 
         return mappedAccounts
+    }
+
+    async findManyByExternalProviderAndUnit(externalProvider: "GOOGLE" | "LEX", unitId: string): Promise<AccountAndUser[]> {
+        const [unit] = 
+        await this.db.select().from(unitTable).where(eq(unitTable.id, unitId))
+
+        if(!unit){
+            throw new UnitNotFound()
+        }
+        
+        const userFromUnit = await this.db
+            .select({
+                user: {
+                    ...usersTable,
+                    unitId: userUnitTable.unitId
+                },
+                account: accountTable
+            })
+            .from(userUnitTable)
+            .leftJoin(usersTable, eq(userUnitTable.userId, usersTable.id))
+            .leftJoin(accountTable, and(eq(accountTable.userId, usersTable.id), eq(accountTable.provider, externalProvider)))
+            .where(
+                eq(userUnitTable.unitId, unit.id)
+            )
+
+        const usersWithAccounts: AccountAndUser[] = userFromUnit.map((row) => ({
+            account: row.account
+                ? Account.reconstitute({
+                    createdAt: row.account.createdAt,
+                    email: row.account.email !== null? (Email.create(row.account.email)): null,
+                    externalId: row.account.externalId,
+                    hash: row.account.syncHash,
+                    id: row.account.id,
+                    provider: row.account.provider as ExternalProvider,
+                    status: row.account.status as AccountStatus,
+                    updatedAt: row.account.updatedAt,
+                    userId: row.account.userId,
+                })
+                : null,
+
+            user: row.user
+                ? User.reconstitute({
+                    createdAt: row.user.createdAt,
+                    firstName: row.user.firstName,
+                    id: row.user.id,
+                    lastName: row.user.lastName,
+                    role: row.user.role as UserRole,
+                    unitId,
+                    updatedAt: row.user.updatedAt,
+                })
+                : null,
+        }));
+
+        return usersWithAccounts
     }
 }

@@ -4,20 +4,20 @@ import { DRIZZLE } from "../../database/providers/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Unit } from "../domain/unit.entity";
 import { unitTable } from "../../database/schemas/unitSchema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { UnitNotFound } from "../domain/errors/unit-not-found";
 import { Classroom, ClassroomStatus } from "../../classroom/domain/classroom.entity";
-import { classroomExternalLinkTable } from "../../database/schemas/externalLinksSchema";
+import { classroomExternalLinkTable, unitExternalLinkTable } from "../../database/schemas/externalLinksSchema";
 import { alias } from "drizzle-orm/pg-core";
 import { classRoomTable } from "../../database/schemas/classRoomSchema";
 import { Institution } from "../../institutions/domain/institution.entity";
+import { UnitLinkNotFound } from "../domain/errors/unit-link-not-found";
 
 @Injectable()
 export class DrizzleUnitRepository implements UnitRepository{
     constructor(
         @Inject(DRIZZLE) private readonly db: NodePgDatabase
     ){}
-
 
     async listUnitClassrooms(unitId: string): Promise<Classroom[]> {
         const externalLink = alias(
@@ -144,5 +144,32 @@ export class DrizzleUnitRepository implements UnitRepository{
             id: unit.id,
             institutionId: unit.institutionId
         }))
+    }
+
+    async findByExternalIdAndProvider(externalId: string, provider: "LEX" | "GOOGLE"): Promise<Unit> {
+        const [linkUnit] = await this.db.select()
+            .from(unitExternalLinkTable)
+            .leftJoin(unitTable, eq(unitExternalLinkTable.unitId, unitTable.id))
+            .where(
+                and(
+                    eq(unitExternalLinkTable.externalId, externalId),
+                    eq(unitExternalLinkTable.provider, provider)
+                )
+            )
+
+        if(!linkUnit){
+            throw new UnitLinkNotFound()
+        }
+
+        if(!linkUnit.units){
+            throw new UnitNotFound()
+        }
+
+        return Unit.create({
+            address: linkUnit.units.address,
+            alias: linkUnit.units.alias,
+            institutionId: linkUnit.units.institutionId,
+            id: linkUnit.units.id
+        })
     }
 }

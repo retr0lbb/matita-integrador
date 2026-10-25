@@ -5,8 +5,8 @@ export const ACCOUNT_REPOSITORY = Symbol('ACCOUNT_REPOSITORY');
 
 
 export type AccountAndUser = {
-    account: Account,
-    user: User
+    account: Account | null ,
+    user: User | null
 }
 
 export interface AccountRepository{
