@@ -97,11 +97,6 @@ GET {{baseUrl}}/institution
 Accept: application/json
 
 
-### LISTA UNIDADES LIGADAS A INSTITUIÇÃO
-GET {{baseUrl}}/institution/{{institutionId}}/units
-Accept: application/json
-
-
 # ============================================================
 # UNITS
 # ============================================================
@@ -121,6 +116,11 @@ Content-Type: application/json
 # Cria a estrutura de unidades organizacionais (OUs) da unidade no Google.
 # Confira @unitId e valide o resultado no Google Admin após executar.
 POST {{baseUrl}}/unit/{{unitId}}/link/google
+Accept: application/json
+
+
+### LISTA UNIDADES LIGADAS A INSTITUIÇÃO
+GET {{baseUrl}}/institution/{{institutionId}}/units
 Accept: application/json
 
 # ============================================================
