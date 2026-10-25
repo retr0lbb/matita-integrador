@@ -40,3 +40,5 @@ a logica por tras do usecase eh bem simples na realidade gracas a arquitetura. e
 entratanto com isso me surgiram algumas duvidas como por exemplo 
 
 DUVIDA: Minhas entidades de ACCOUNT e USER nao sao ligadas a instituição e nem unidade, pois como ja havia dito que temos algumas coisas nao tao claras nesse caminho das maplebears. e entao para uma sincronização mais eficiente eu teria de ligar as contas a alguma instituição ou unidade. eu devo ligar tudo ambos os usuarios e contas ou apenas as contas ou apenas os usuarios?
+
+DUVIDA: A api da lex nao faz muita distincao do que eh conta e o que eh usuario parece que eh um conceito so para eles, entao eu queria saber se, eu deveria focar em implementar e otimizar o repositorio do usuario ou o repositorio das contas, embora as contas sejam as unicas que realmente tenham a tabela de link externo
