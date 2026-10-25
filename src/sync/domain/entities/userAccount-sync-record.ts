@@ -61,12 +61,13 @@ export class UserAccountSyncRecord extends SyncRecord{
         }
 
         if(this.compareMail(other)){
-            return true
+            return false
         }
 
         if(this.compareNameStrict(other)){
-            return true
+            return false
         }
 
+        return true
     }
 }

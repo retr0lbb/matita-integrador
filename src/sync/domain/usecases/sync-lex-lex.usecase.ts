@@ -18,7 +18,7 @@ export class SyncLexToLex implements UseCase{
     async execute(tenantId: string) {
         const metadata = await this.lexSnapshotPort.listInstitutions()
 
-        const found = tenantId in metadata.data
+        const found = metadata.data.some(t => t.id === tenantId)
 
         if(!found){
             throw new Error("Tenant Doesnot exists")
